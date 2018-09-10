@@ -1,0 +1,37 @@
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.2",
+    "moment-timer": "^1.2.3",
+    "moment-timezone": "^0.5.21",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-idle-timer": "^4.0.7",
+    "react-is-scrolling": "^1.0.1",
+    "react-moment": "^0.7.9",
+    "react-onscroll": "^1.0.4",
+    "react-player": "^1.6.4",
+    "react-rangeslider": "^2.2.0",
+    "react-scripts": "1.1.4",
+    "react-slider": "^0.11.2",
+    "react-text-marquee": "^1.0.1",
+    "react-vimeo": "^2.0.0",
+    "redux": "^4.0.0",
+    "video-react": "^0.13.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).",
+  "main": "index.js",
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC"
+}
