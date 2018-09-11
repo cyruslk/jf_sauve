@@ -21,10 +21,12 @@ class App extends Component {
         backgroundColour: '#'+Math.random().toString(16).substr(-6),
         counter: 0,
         displayThumbnails: false,
+        display_lightbox: "none",
         img_links: "",
         intermezzoDisplay: "none",
         windowWidth: window.innerWidth,
         windowHeight: window.innerHeight,
+        img_thumbnails_bigger: "",
         slider_data: "",
         thumbnails_data: "",
         videos_data: "",
@@ -54,7 +56,6 @@ class App extends Component {
       this._toggleMain = this._toggleMain.bind(this);
       this._handleChange = this._handleChange.bind(this);
       this._onHoverInfoText = this._onHoverInfoText.bind(this);
-
   }
 
   componentDidMount(){
@@ -94,7 +95,6 @@ class App extends Component {
      .catch(function (error) {
        console.log(error);
      });
-     console.log(this.state.info_data);
     }
 
  updateWindowDimensions() {
@@ -130,6 +130,22 @@ class App extends Component {
       return this._toggleVideos();
     }
   }
+
+  handleSortEnter(imgLink) {
+       console.log(imgLink);
+       this.setState({
+         img_thumbnails_bigger: imgLink,
+         display_lightbox: "flex"
+       })
+    }
+
+    handleSortLeave() {
+         this.setState({
+           img_thumbnails_bigger: "",
+           display_lightbox: "none"
+         })
+         console.log("here going there");
+      }
 
   _toggleInfo(e){
     this.setState({
@@ -185,6 +201,13 @@ class App extends Component {
      let leftOrRight = ["left", "right"]
      return leftOrRight[Math.floor(Math.random() * leftOrRight.length)];
    }
+    function returnRandomColour(){
+      return '#'+Math.random().toString(16).substr(-6);
+    }
+
+   const randomColor = {
+     color: returnRandomColour()
+   };
 
   const itemsToRender_slider = this.state.slider_data
                       .slice(this.state.counter, this.state.counter+1)
@@ -213,26 +236,8 @@ class App extends Component {
     return scaleClass[Math.floor(Math.random()*scaleClass.length)]
   }
 
-  const itemsToRender_Thumbnails = this.state.thumbnails_data
-                      .map((ele, i) => {
-
-      if(ele.gsx$link.$t.length > 0){
-      return (
-      <ImagesRandom
-      key={i}
-      imgLink={ele.gsx$link.$t}
-      thumbnails_data={this.state.thumbnails_data}
-      className={returnRandomScale()}
-      slider={this.state.value}
-      id={i}
-      />
-      )
-    }
-  })
-
   this.setState({
-    visible_data_slider: itemsToRender_slider,
-    visible_data_thumbnails: itemsToRender_Thumbnails,
+    visible_data_slider: itemsToRender_slider
   })
  }
 
@@ -265,6 +270,12 @@ _onMouseMove(e){
       backgroundColor: this.state.backgroundColour
       };
 
+      let styles_info = {
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: "black"
+        };
+
     let style_clicker = {
       position: "absolute",
       left: this.state.x,
@@ -296,6 +307,11 @@ _onMouseMove(e){
              && this.state.info === false
              && this.state.videos === false
              && this.state.index === false){
+
+      function returnRandomShit(){
+        return '#'+Math.random().toString(16).substr(-6);
+      }
+
       return (
         <IdleTimer
         onIdleSlider={this.onIdleSlider}
@@ -311,13 +327,13 @@ _onMouseMove(e){
           <section className="main_info" style={style_clicker}>
             <div>
             <span>Jean François Sauvé</span>
-            <span>{this.state.image_caption_slider}</span>
+            <span style={{color: 'white'}}>{this.state.image_caption_slider}</span>
             </div>
             </section>
-            <section className="counter_1">
+            <section className="counter_1" style={{color: "black"}}>
             {this.state.counter}
             </section>
-            <section className="counter_2">
+            <section className="counter_2" style={{color: "black"}}>
             {this.state.slider_data.length}
             </section>
             <section className="info_menu">
@@ -355,14 +371,19 @@ _onMouseMove(e){
               })
 
               const mainTextNewArray = [];
-              const mainTextOldArray = this.state.main_text_info.split("")
+              const mainTextOldArray = this.state.main_text_info.split(" ")
 
 
               function convertToSpans(oldArray, newArray) {
+                function returnRandomColour(){
+                  return '#'+Math.random().toString(16).substr(-6);
+                }
+
                 oldArray.map((oldArrayItem, index) => {
                   if(oldArrayItem === " "){
                     return newArray.push(
                       <span key={index}
+                      style={{color: returnRandomColour()}}
                       className="span_main_text">
                       {oldArrayItem}
                       </span>
@@ -370,6 +391,7 @@ _onMouseMove(e){
                   }else{
                     return newArray.push(
                       <span key={index}
+                      style={{color: returnRandomColour()}}
                       className="span_main_text">
                       {oldArrayItem}
                       </span>
@@ -379,16 +401,13 @@ _onMouseMove(e){
               }
 
               convertToSpans(mainTextOldArray, mainTextNewArray);
-              console.log(mainTextOldArray, mainTextNewArray);
-
-
               return (
                  <IdleTimer
                  onActiveInfo={this.onActiveInfo}
                  onIdleInfo={this.onIdleInfo}
                  timeout={1000}>
 
-                 <div className="App" style={styles}
+                 <div className="App" style={styles_info}
                   onClick={this._onMouseClick}
                   onKeyPress={this._handleKeyPress}
                   tabIndex="0">
@@ -426,32 +445,53 @@ _onMouseMove(e){
                    && this.state.videos === false
                    && this.state.index === true){
 
-                    return(
-                      <div className="App" style={styles}
-                      onKeyPress={this._handleKeyPress}
-                      tabIndex="0">
+                     const thumbnails_rendered = this.state.thumbnails_data.map((ele, i) => {
+                       function returnRandomScale(){
+                         const scaleClass = ["scale_04","scale_05","scale_06","scale_07", "scale_08", "scale_09", "scale_1"];
+                         return scaleClass[Math.floor(Math.random()*scaleClass.length)]
+                       }
+                       return (
+                           <div className="img_thumbnails" key={i*3.33}>
+                           <img src={ele.gsx$link.$t}
+                           className={returnRandomScale()}
+                           onClick={() => this.handleSortEnter(ele.gsx$link.$t)}
+                           key={i*3.33}
+                           />
+                         </div>
+                       )
+                     })
 
-                        <section className="img_thumbnails_container" style={pickendRandomColour}>
-                          {this.state.visible_data_thumbnails}
-                        </section>
+                     if(this.state.display_lightbox === "none"){
+                       return(
+                         <div className="App" style={styles_info}
+                         onKeyPress={this._handleKeyPress}
+                         tabIndex="0">
+                           <section className="img_thumbnails_container">
+                             {thumbnails_rendered}
+                           </section>
+                             <section className="info_menu">
+                             <span onClick={this._toggleMain}> ←← </span>
+                             <span className="selected" onClick={this._toggleIndex}>(1)index</span>
+                             <span onClick={this._toggleInfo}>(2)info</span>
+                             <span onClick={this._toggleVideos}>(3)video works</span>
+                             <span>click to open</span>
+                             </section>
+                         </div>
+                       )
 
-                          <section className="info_menu">
-                          <span onClick={this._toggleMain}> ←← </span>
-                          <span className="selected" onClick={this._toggleIndex}>(1)index</span>
-                          <span onClick={this._toggleInfo}>(2)info</span>
-                          <span onClick={this._toggleVideos}>(3)video works</span>
-
-                          <Slider
-                              min={0}
-                              max={10}
-                              tooltip={true}
-                              value={this.state.value}
-                              className="slider_thumbnails"
-                              onChange={this._handleChange}
-                            />
-                          </section>
-                      </div>
-                    )
+                     }if(this.state.display_lightbox === "flex"){
+                       return(
+                         <div>
+                           <section className="img_thumbnails_focus"
+                            style={{display: this.state.display_lightbox}}>
+                             <img src={this.state.img_thumbnails_bigger}/>
+                             <section className="info_menu">
+                                <span>click to close</span>
+                             </section>
+                           </section>
+                         </div>
+                       )
+                     }
                   }else if(this.state.slider_data.length > 0
                            && this.state.info === false
                            && this.state.index === false
