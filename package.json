@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@u-wave/react-vimeo": "^0.5.0",
     "axios": "^0.18.0",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
@@ -17,6 +18,7 @@
     "react-player": "^1.6.4",
     "react-rangeslider": "^2.2.0",
     "react-scripts": "1.1.4",
+    "react-slick": "^0.23.1",
     "react-slider": "^0.11.2",
     "react-text-marquee": "^1.0.1",
     "react-vimeo": "^2.0.0",

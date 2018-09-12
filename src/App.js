@@ -3,10 +3,9 @@ import './App.css';
 import ImagesRandom from "./ImagesRandom.js"
 import axios from 'axios';
 import IdleTimer from 'react-idle-timer';
-import Slider from 'react-rangeslider';
-import Moment from 'react-moment';
+import Slider from "react-slick";
+import Vimeo from '@u-wave/react-vimeo';
 import ReactDOMServer from 'react-dom/server';
-var Vimeo = require('react-vimeo');
 const preFix = "https://spreadsheets.google.com/feeds/list/";
 const sheetID = "1n2-gyTA4D4Qprxn_e4o2UEVz-E5mhTYelFaZnm_Aa1w";
 const postFix = "/od6/public/values?alt=json"
@@ -16,44 +15,47 @@ var _ = require('lodash');
 class App extends Component {
 
   constructor(props) {
-      super(props);
-      this.state = {
-        backgroundColour: '#'+Math.random().toString(16).substr(-6),
-        counter: 0,
-        displayThumbnails: false,
-        img_links: "",
-        intermezzoDisplay: "none",
-        windowWidth: window.innerWidth,
-        windowHeight: window.innerHeight,
-        slider_data: "",
-        thumbnails_data: "",
-        videos_data: "",
-        info_data: "",
-        main_text_info: "",
-        inquiries_info: "",
-        other_links_info: "",
-        info: false,
-        videos: false,
-        index: false,
-        visible_data_slider: "",
-        x: 200,
-        y: 200,
-        scroll: "hidden",
-        image_caption_slider: "Click to slide",
-        value: 0
-      };
-      this.idleTimer = null;
-      this.onIdleSlider = this.onIdleSlider.bind(this);
-      this.onActiveInfo = this._onActiveInfo.bind(this);
-      this._onMouseClick = this._onMouseClick.bind(this);
-      this._onMouseMove = this._onMouseMove.bind(this);
-      this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-      this._toggleInfo = this._toggleInfo.bind(this);
-      this._toggleIndex = this._toggleIndex.bind(this);
-      this._toggleVideos = this._toggleVideos.bind(this);
-      this._toggleMain = this._toggleMain.bind(this);
-      this._handleChange = this._handleChange.bind(this);
-      this._onHoverInfoText = this._onHoverInfoText.bind(this);
+       super(props);
+       this.state = {
+         backgroundColour: '#'+Math.random().toString(16).substr(-6),
+         counter: 0,
+         displayThumbnails: false,
+         display_lightbox: "none",
+         img_links: "",
+         intermezzoDisplay: "none",
+         windowWidth: window.innerWidth,
+         windowHeight: window.innerHeight,
+         img_thumbnails_bigger: "",
+         img_thumbnails_index: "",
+         slider_data: "",
+         thumbnails_data: "",
+         videos_data: "",
+         info_data: "",
+         main_text_info: "",
+         inquiries_info: "",
+         other_links_info: "",
+         info: false,
+         videos: false,
+         index: false,
+         visible_data_slider: "",
+         x: 200,
+         y: 200,
+         scroll: "hidden",
+         image_caption_slider: "Click to slide",
+         value: 0
+       };
+       this.idleTimer = null;
+       this.onIdleSlider = this.onIdleSlider.bind(this);
+       this.onActiveInfo = this._onActiveInfo.bind(this);
+       this._onMouseClick = this._onMouseClick.bind(this);
+       this._onMouseMove = this._onMouseMove.bind(this);
+       this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+       this._toggleInfo = this._toggleInfo.bind(this);
+       this._toggleIndex = this._toggleIndex.bind(this);
+       this._toggleVideos = this._toggleVideos.bind(this);
+       this._toggleMain = this._toggleMain.bind(this);
+       this._handleChange = this._handleChange.bind(this);
+       this._onHoverInfoText = this._onHoverInfoText.bind(this);
 
   }
 
@@ -89,7 +91,6 @@ class App extends Component {
        this.setState({
          videos_data: shuffledResponse.filter(ele => ele.gsx$section.$t === "video_works")
        })
-       console.log(this.state.videos_data);
      })
      .catch(function (error) {
        console.log(error);
@@ -131,6 +132,25 @@ class App extends Component {
     }
   }
 
+
+  handleSortEnter(imgLink, i) {
+     console.log(imgLink, i);
+     this.setState({
+       img_thumbnails_bigger: imgLink,
+       img_thumbnails_index: i,
+       display_lightbox: "flex"
+     })
+  }
+
+  handleSortLeave() {
+       this.setState({
+         img_thumbnails_bigger: "",
+         display_lightbox: "none"
+       })
+       console.log("here going there");
+    }
+
+
   _toggleInfo(e){
     this.setState({
       index: false,
@@ -170,7 +190,6 @@ class App extends Component {
      backgroundColour: newCol,
      counter: actualCounter
    })
-   console.log(this.state.counter, "HERE");
    this.setState({
      image_caption_slider: this.state.slider_data[this.state.counter]
                            .gsx$caption.$t
@@ -200,9 +219,30 @@ class App extends Component {
         </div>
       )
     }else{
+
       return(
-        <div className="main_text_container" key={i*2}>
-          <h1>{ele.gsx$additionaltxt.$t}</h1>
+        <div>
+        <svg viewBox="0 0 500 500" id="svg">
+          <path
+          id="curve"
+          fill="transparent"
+          d='M-426,160 C-264,-268 294,-270 444,200'/>
+          <text id="svg_text" fill="white">
+            <textPath xlinkHref="#curve">
+              {ele.gsx$additionaltxt.$t}
+
+          <animate
+            attributeName="startOffset"
+            from="0%" to ="100%"
+            begin="0s" dur="20s"
+            repeatCount="indefinite"
+            keyTimes="0;1"
+            calcMode="spline"
+            keySplines="0.1 0.2 .22 1"/>
+
+            </textPath>
+          </text>
+          </svg>
         </div>
       )
     }
@@ -265,6 +305,12 @@ _onMouseMove(e){
       backgroundColor: this.state.backgroundColour
       };
 
+      let styles_info = {
+      width: "100vw",
+      height: "100vh",
+      backgroundColor: "black"
+      };
+
     let style_clicker = {
       position: "absolute",
       left: this.state.x,
@@ -284,6 +330,16 @@ _onMouseMove(e){
       backgroundColor: this.state.backgroundColour
     }
 
+    var settingsSlider = {
+       dots: false,
+       infinite: true,
+       speed: 500,
+       slidesToShow: 1,
+       slidesToScroll: 1,
+       autoplaySpeed: 500,
+       autoplay: true
+     };
+
     if(this.state.slider_data.length === 0){
       return(
         <div className="loader">
@@ -302,6 +358,29 @@ _onMouseMove(e){
         onActiveInfo={this.onActiveInfo}
         timeout={3000}>
 
+        <section className="first_slider">
+          <Slider {...settingsSlider}>
+             <div>
+              <img src="https://res.cloudinary.com/www-c-t-l-k-com/image/upload/v1527874935/jf_s/43220028-copy.jpg" />
+             </div>
+             <div>
+              <img src="https://res.cloudinary.com/www-c-t-l-k-com/image/upload/v1527874935/jf_s/43220028-copy.jpg" />
+             </div>
+             <div>
+              <img src="https://res.cloudinary.com/www-c-t-l-k-com/image/upload/v1527874935/jf_s/43220028-copy.jpg" />
+             </div>
+             <div>
+             <img src="https://res.cloudinary.com/www-c-t-l-k-com/image/upload/v1527874935/jf_s/43220028-copy.jpg" />
+             </div>
+             <div>
+             <img src="https://res.cloudinary.com/www-c-t-l-k-com/image/upload/v1527874935/jf_s/43220028-copy.jpg" />
+             </div>
+             <div>
+             <img src="https://res.cloudinary.com/www-c-t-l-k-com/image/upload/v1527874935/jf_s/43220028-copy.jpg" />
+             </div>
+           </Slider>
+        </section>
+
         <div id="slider" className="App" style={styles}
              onClick={this._onMouseClick}
              onMouseMove={this._onMouseMove}
@@ -314,7 +393,7 @@ _onMouseMove(e){
             <span>{this.state.image_caption_slider}</span>
             </div>
             </section>
-            <section className="counter_1">
+            <section className="counter_1 ">
             {this.state.counter}
             </section>
             <section className="counter_2">
@@ -379,7 +458,6 @@ _onMouseMove(e){
               }
 
               convertToSpans(mainTextOldArray, mainTextNewArray);
-              console.log(mainTextOldArray, mainTextNewArray);
 
 
               return (
@@ -422,40 +500,105 @@ _onMouseMove(e){
                  </IdleTimer>
             );
           }else if(this.state.slider_data.length > 0
-                   && this.state.info === false
-                   && this.state.videos === false
-                   && this.state.index === true){
+            && this.state.info === false
+            && this.state.videos === false
+            && this.state.index === true){
 
-                    return(
-                      <div className="App" style={styles}
-                      onKeyPress={this._handleKeyPress}
-                      tabIndex="0">
+              const thumbnails_rendered = this.state.thumbnails_data.map((ele, i) => {
+                function returnRandomScale(){
+                  const scaleClass = ["scale_04","scale_05","scale_06","scale_07", "scale_08", "scale_09", "scale_1"];
+                  return scaleClass[Math.floor(Math.random()*scaleClass.length)]
+                }
+                return (
+                    <div className="img_thumbnails" key={i*3.33}>
+                    <img src={ele.gsx$link.$t}
+                    className={returnRandomScale()}
+                    onClick={() => this.handleSortEnter(ele.gsx$link.$t, i)}
+                    key={i*3.33}
+                    />
+                  </div>
+                )
+              })
 
-                        <section className="img_thumbnails_container" style={pickendRandomColour}>
-                          {this.state.visible_data_thumbnails}
-                        </section>
+              if(this.state.display_lightbox === "none"){
+                return(
+                  <div className="App" style={styles}
+                  onKeyPress={this._handleKeyPress}
+                  tabIndex="0">
+                    <section className="img_thumbnails_container" style={{backgroundColor: this.state.backgroundColour}}>
+                      {thumbnails_rendered}
+                    </section>
+                      <section id="info_menu_index" className="info_menu">
+                      <span onClick={this._toggleMain}> ←← </span>
+                      <span className="selected" onClick={this._toggleIndex}>(1)index</span>
+                      <span onClick={this._toggleInfo}>(2)info</span>
+                      <span onClick={this._toggleVideos}>(3)video works</span>
+                      <span style={{color: "black", textTransform: "lowercase"}}>click to open</span>
+                      </section>
+                  </div>
+                )
 
-                          <section className="info_menu">
-                          <span onClick={this._toggleMain}> ←← </span>
-                          <span className="selected" onClick={this._toggleIndex}>(1)index</span>
-                          <span onClick={this._toggleInfo}>(2)info</span>
-                          <span onClick={this._toggleVideos}>(3)video works</span>
-
-                          <Slider
-                              min={0}
-                              max={10}
-                              tooltip={true}
-                              value={this.state.value}
-                              className="slider_thumbnails"
-                              onChange={this._handleChange}
-                            />
-                          </section>
-                      </div>
-                    )
+              }if(this.state.display_lightbox === "flex"){
+                return(
+                  <div>
+                    <section className="img_thumbnails_focus"
+                    onClick={() => this.handleSortLeave()}
+                     onMouseMove={this._onMouseMove}
+                     style={{
+                       display: this.state.display_lightbox,
+                       backgroundColor: "black"}}>
+                      <img src={this.state.img_thumbnails_bigger}/>
+                      <section className="main_info" style={style_clicker}>
+                         <span
+                         style={{color: this.state.backgroundColour}}
+                         className="anim_text_darkbox">
+                         click to close
+                         </span>
+                         <span
+                         style={{color: "white"}}>
+                         {this.state.img_thumbnails_index+1}/{this.state.thumbnails_data.length}
+                         </span>
+                      </section>
+                    </section>
+                  </div>
+                )
+              }
                   }else if(this.state.slider_data.length > 0
                            && this.state.info === false
                            && this.state.index === false
                            && this.state.videos === true){
+
+                        console.log(this.state.videos_data, "-----");
+
+                        const videosRendered = this.state.videos_data.map((ele, i) => {
+                          return (
+                            <section className="video_container" key={i}>
+                            <section className="vimeo_embed">
+                            <Vimeo
+                                video={ele.gsx$link.$t}
+                                autoplay
+                                background={true}
+                                width={1296}
+                                height={540}
+                              />
+                            <div className="control_vimeo">
+                            <div>
+                              <span>{ele.gsx$caption.$t}</span>
+                            </div>
+                            <input
+                              type="range"
+                              min={0}
+                              max={1}
+                              step={0.01}
+                            />
+                            </div>
+                            </section>
+                            </section>
+                          )
+                        })
+
+                        console.log(this.state.videos_data);
+
 
                         return(
                           <div className="App_videos"
@@ -463,18 +606,22 @@ _onMouseMove(e){
                           tabIndex="0">
 
                           <section className="video_works">
-                              <div className="vid_container">
-                                <iframe src="https://player.vimeo.com/video/232729570?title=0&byline=0&portrait=0" width="1000" height="561" frameBorder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowFullScreen="true"></iframe>
-                              </div>
+
                           </section>
-
-
-                          <section className="info_menu">
+                          <section id="info_menu_index" className="info_menu">
                           <span onClick={this._toggleMain}>←←</span>
                           <span onClick={this._toggleIndex}>(1)index</span>
                           <span onClick={this._toggleInfo}>(2)info</span>
                           <span className="selected" onClick={this._toggleVideos}>(3)video works</span>
+                          <span style={{color: "black",
+                                        textTransform: "lowercase",
+                                        color: "white"}}>click to scroll</span>
                           </section>
+
+                          <section className="video_main_container">
+                            {videosRendered}
+                          </section>
+
                           </div>
                         )
                       }
