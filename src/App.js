@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
-import ImagesRandom from "./ImagesRandom.js"
+import ImagesRandom from "./ImagesRandom.js";
+import Videos from "./Videos.js";
 import axios from 'axios';
 import IdleTimer from 'react-idle-timer';
 import Slider from "react-slick";
-import Vimeo from '@u-wave/react-vimeo';
 import ReactDOMServer from 'react-dom/server';
 const preFix = "https://spreadsheets.google.com/feeds/list/";
 const sheetID = "1n2-gyTA4D4Qprxn_e4o2UEVz-E5mhTYelFaZnm_Aa1w";
@@ -22,7 +22,7 @@ class App extends Component {
          displayThumbnails: false,
          display_lightbox: "none",
          img_links: "",
-         intermezzoDisplay: "none",
+         intermezzoDisplay: false,
          windowWidth: window.innerWidth,
          windowHeight: window.innerHeight,
          img_thumbnails_bigger: "",
@@ -41,27 +41,22 @@ class App extends Component {
          x: 200,
          y: 200,
          scroll: "hidden",
-         image_caption_slider: "Click to slide",
-         value: 0
+         image_caption_slider: "Click for more"
        };
        this.idleTimer = null;
-       this.onIdleSlider = this.onIdleSlider.bind(this);
-       this.onActiveInfo = this._onActiveInfo.bind(this);
+       this.onActive = this._onActive.bind(this)
+       this.onIdle = this._onIdle.bind(this)
        this._onMouseClick = this._onMouseClick.bind(this);
        this._onMouseMove = this._onMouseMove.bind(this);
-       this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
        this._toggleInfo = this._toggleInfo.bind(this);
        this._toggleIndex = this._toggleIndex.bind(this);
        this._toggleVideos = this._toggleVideos.bind(this);
        this._toggleMain = this._toggleMain.bind(this);
-       this._handleChange = this._handleChange.bind(this);
        this._onHoverInfoText = this._onHoverInfoText.bind(this);
 
   }
 
   componentDidMount(){
-    this.updateWindowDimensions();
-    window.addEventListener('resize', this.updateWindowDimensions);
     document.addEventListener("keydown", this._handleKeyPress.bind(this));
     document.body.style.backgroundColor = "black";
      axios.get(spreadsheetURL)
@@ -111,12 +106,6 @@ class App extends Component {
     })
   }
 
-  _handleChange = (value) => {
-  this.setState({
-    value: value
-  })
-}
-
   _handleKeyPress = (value) => {
     if (value.charCode == 48) {
       return this._toggleMain();
@@ -131,7 +120,6 @@ class App extends Component {
       return this._toggleVideos();
     }
   }
-
 
   handleSortEnter(imgLink, i) {
      console.log(imgLink, i);
@@ -155,7 +143,8 @@ class App extends Component {
     this.setState({
       index: false,
       info: true,
-      videos: false
+      videos: false,
+      intermezzoDisplay: false
     })
   }
 
@@ -164,6 +153,7 @@ class App extends Component {
       index: false,
       info: false,
       videos: false,
+      intermezzoDisplay: false
     })
   }
 
@@ -171,17 +161,56 @@ class App extends Component {
     this.setState({
       index: true,
       info: false,
-      videos: false
+      videos: false,
+      intermezzoDisplay: false
     })
+    console.log("here ---------");
   }
 
   _toggleVideos(e){
     this.setState({
       index: false,
       info: false,
-      videos: true
+      videos: true,
+      intermezzoDisplay: false
     })
   }
+
+_onActive(e) {
+  console.log('user is  active', e)
+  this.setState({
+    intermezzoDisplay: false
+  })
+}
+
+_onIdle(e) {
+  console.log('user is not active', e)
+  this.setState({
+    intermezzoDisplay: true
+  })
+}
+
+
+handlePause(event) {
+  this.setState({
+    paused: event.target.checked,
+  });
+}
+
+handlePlayerPause() {
+  this.setState({ paused: true });
+}
+
+handlePlayerPlay() {
+  this.setState({ paused: false });
+}
+
+handleVolume(event) {
+  this.setState({
+    volume: parseFloat(event.target.value),
+  });
+}
+
 
  _onMouseClick(e){
    const  newCol = '#'+Math.random().toString(16).substr(-6);
@@ -221,24 +250,20 @@ class App extends Component {
     }else{
 
       return(
-        <div>
-        <svg viewBox="0 0 500 500" id="svg">
+        <div key={i*3.3}>
+        <svg width="1280"
+             height="960"
+             viewBox="0 0 500 500" id="svg"
+             height="100%" width="100%"
+             preserveAspectRatio="none">
           <path
           id="curve"
           fill="transparent"
-          d='M-426,160 C-264,-268 294,-270 444,200'/>
+          d="M3.858,58.607c16.784-5.985,33.921-10.518,51.695-12.99c50.522-7.028,101.982,0.51,151.892,8.283c17.83,2.777,35.632,5.711,53.437,8.628	c51.69,8.469,103.241,11.438,155.3,3.794c53.714-7.887,106.383-20.968,159.374-32.228c11.166-2.373,27.644-7.155,39.231-4.449" />
           <text id="svg_text" fill="white">
             <textPath xlinkHref="#curve">
               {ele.gsx$additionaltxt.$t}
 
-          <animate
-            attributeName="startOffset"
-            from="0%" to ="100%"
-            begin="0s" dur="20s"
-            repeatCount="indefinite"
-            keyTimes="0;1"
-            calcMode="spline"
-            keySplines="0.1 0.2 .22 1"/>
 
             </textPath>
           </text>
@@ -330,17 +355,9 @@ _onMouseMove(e){
       backgroundColor: this.state.backgroundColour
     }
 
-    var settingsSlider = {
-       dots: false,
-       infinite: true,
-       speed: 500,
-       slidesToShow: 1,
-       slidesToScroll: 1,
-       autoplaySpeed: 500,
-       autoplay: true
-     };
+    if(this.state.slider_data.length === 0
+     && this.state.intermezzoDisplay === false){
 
-    if(this.state.slider_data.length === 0){
       return(
         <div className="loader">
           <span>
@@ -349,37 +366,18 @@ _onMouseMove(e){
         </div>
       )
     }else if(this.state.slider_data.length > 0
-             && this.state.info === false
-             && this.state.videos === false
-             && this.state.index === false){
+     && this.state.info === false
+     && this.state.videos === false
+     && this.state.index === false
+     && this.state.intermezzoDisplay === false){
+
       return (
         <IdleTimer
-        onIdleSlider={this.onIdleSlider}
-        onActiveInfo={this.onActiveInfo}
-        timeout={3000}>
-
-        <section className="first_slider">
-          <Slider {...settingsSlider}>
-             <div>
-              <img src="https://res.cloudinary.com/www-c-t-l-k-com/image/upload/v1527874935/jf_s/43220028-copy.jpg" />
-             </div>
-             <div>
-              <img src="https://res.cloudinary.com/www-c-t-l-k-com/image/upload/v1527874935/jf_s/43220028-copy.jpg" />
-             </div>
-             <div>
-              <img src="https://res.cloudinary.com/www-c-t-l-k-com/image/upload/v1527874935/jf_s/43220028-copy.jpg" />
-             </div>
-             <div>
-             <img src="https://res.cloudinary.com/www-c-t-l-k-com/image/upload/v1527874935/jf_s/43220028-copy.jpg" />
-             </div>
-             <div>
-             <img src="https://res.cloudinary.com/www-c-t-l-k-com/image/upload/v1527874935/jf_s/43220028-copy.jpg" />
-             </div>
-             <div>
-             <img src="https://res.cloudinary.com/www-c-t-l-k-com/image/upload/v1527874935/jf_s/43220028-copy.jpg" />
-             </div>
-           </Slider>
-        </section>
+        ref={ref => { this.idleTimer = ref }}
+        element={document}
+        onActive={this.onActive}
+        onIdle={this.onIdle}
+        timeout={4000}>
 
         <div id="slider" className="App" style={styles}
              onClick={this._onMouseClick}
@@ -414,9 +412,10 @@ _onMouseMove(e){
 
       );
     }else if(this.state.info_data.length > 0
-             && this.state.info === true
-             && this.state.videos === false
-             && this.state.index === false){
+     && this.state.info === true
+     && this.state.videos === false
+     && this.state.index === false
+     && this.state.intermezzoDisplay === false){
 
               const other_links_info_maped = this.state.other_links_info.map((ele, i) => {
                   return (
@@ -461,12 +460,14 @@ _onMouseMove(e){
 
 
               return (
-                 <IdleTimer
-                 onActiveInfo={this.onActiveInfo}
-                 onIdleInfo={this.onIdleInfo}
-                 timeout={1000}>
+                <IdleTimer
+                ref={ref => { this.idleTimer = ref }}
+                element={document}
+                onActive={this.onActive}
+                onIdle={this.onIdle}
+                timeout={4000}>
 
-                 <div className="App" style={styles}
+                 <div id="no_background" className="App" style={styles}
                   onClick={this._onMouseClick}
                   onKeyPress={this._handleKeyPress}
                   tabIndex="0">
@@ -488,21 +489,21 @@ _onMouseMove(e){
                           {other_links_info_maped}
                          </div>
                          </div>
-                     </section>
-                     <section className="info_menu">
-                     <span onClick={this._toggleMain}> ←← </span>
-                     <span onClick={this._toggleIndex}>(1)index</span>
-                     <span className="selected" onClick={this._toggleInfo}>(2)info</span>
-                     <span onClick={this._toggleVideos}>(3)video works</span>
-                     </section>
-                 </div>
-
+                         </section>
+                         <section className="black info_menu">
+                         <span onClick={this._toggleMain}> ←← </span>
+                         <span onClick={this._toggleIndex}>(1)index</span>
+                         <span className="selected" onClick={this._toggleInfo}>(2)info</span>
+                         <span onClick={this._toggleVideos}>(3)video works</span>
+                         </section>
+                     </div>
                  </IdleTimer>
             );
           }else if(this.state.slider_data.length > 0
-            && this.state.info === false
-            && this.state.videos === false
-            && this.state.index === true){
+          && this.state.info === false
+          && this.state.videos === false
+          && this.state.index === true
+          && this.state.intermezzoDisplay === false){
 
               const thumbnails_rendered = this.state.thumbnails_data.map((ele, i) => {
                 function returnRandomScale(){
@@ -510,18 +511,31 @@ _onMouseMove(e){
                   return scaleClass[Math.floor(Math.random()*scaleClass.length)]
                 }
                 return (
-                    <div className="img_thumbnails" key={i*3.33}>
-                    <img src={ele.gsx$link.$t}
-                    className={returnRandomScale()}
-                    onClick={() => this.handleSortEnter(ele.gsx$link.$t, i)}
-                    key={i*3.33}
-                    />
+                    <IdleTimer
+                    ref={ref => { this.idleTimer = ref }}
+                    element={document}
+                    onActive={this.onActive}
+                    onIdle={this.onIdle}
+                    timeout={4000}>
+                        <div className="img_thumbnails" key={i*3.33}>
+                        <img src={ele.gsx$link.$t}
+                        className={returnRandomScale()}
+                        onClick={() => this.handleSortEnter(ele.gsx$link.$t, i)}
+                        key={i*3.33}
+                        />
                   </div>
+                  </IdleTimer>
                 )
               })
 
               if(this.state.display_lightbox === "none"){
                 return(
+                  <IdleTimer
+                  ref={ref => { this.idleTimer = ref }}
+                  element={document}
+                  onActive={this.onActive}
+                  onIdle={this.onIdle}
+                  timeout={4000}>
                   <div className="App" style={styles}
                   onKeyPress={this._handleKeyPress}
                   tabIndex="0">
@@ -536,10 +550,18 @@ _onMouseMove(e){
                       <span style={{color: "black", textTransform: "lowercase"}}>click to open</span>
                       </section>
                   </div>
+                  </IdleTimer>
                 )
 
               }if(this.state.display_lightbox === "flex"){
                 return(
+                  <IdleTimer
+                  ref={ref => { this.idleTimer = ref }}
+                  element={document}
+                  onActive={this.onActive}
+                  onIdle={this.onIdle}
+                  timeout={4000}>
+
                   <div>
                     <section className="img_thumbnails_focus"
                     onClick={() => this.handleSortLeave()}
@@ -561,71 +583,68 @@ _onMouseMove(e){
                       </section>
                     </section>
                   </div>
+                  </IdleTimer>
                 )
               }
                   }else if(this.state.slider_data.length > 0
-                           && this.state.info === false
-                           && this.state.index === false
-                           && this.state.videos === true){
+                   && this.state.info === false
+                   && this.state.index === false
+                   && this.state.videos === true
+                   && this.state.intermezzoDisplay === false){
+                    const videosRendered = this.state.videos_data.map((ele, i) => {
+                      return (
+                        <div key={i*4} id="videos">
+                          <Videos videos_data={this.state.videos_data[i]}/>
+                        </div>
 
-                        console.log(this.state.videos_data, "-----");
-
-                        const videosRendered = this.state.videos_data.map((ele, i) => {
-                          return (
-                            <section className="video_container" key={i}>
-                            <section className="vimeo_embed">
-                            <Vimeo
-                                video={ele.gsx$link.$t}
-                                autoplay
-                                background={true}
-                                width={1296}
-                                height={540}
-                              />
-                            <div className="control_vimeo">
-                            <div>
-                              <span>{ele.gsx$caption.$t}</span>
-                            </div>
-                            <input
-                              type="range"
-                              min={0}
-                              max={1}
-                              step={0.01}
-                            />
-                            </div>
-                            </section>
-                            </section>
                           )
                         })
 
-                        console.log(this.state.videos_data);
-
-
                         return(
+                          <IdleTimer
+                          ref={ref => { this.idleTimer = ref }}
+                          element={document}
+                          onActive={this.onActive}
+                          onIdle={this.onIdle}
+                          timeout={4000}>
+
                           <div className="App_videos"
                           onKeyPress={this._handleKeyPress}
                           tabIndex="0">
-
-                          <section className="video_works">
-
-                          </section>
-                          <section id="info_menu_index" className="info_menu">
+                          <section id="info_menu_index" className="black info_menu">
                           <span onClick={this._toggleMain}>←←</span>
                           <span onClick={this._toggleIndex}>(1)index</span>
                           <span onClick={this._toggleInfo}>(2)info</span>
                           <span className="selected" onClick={this._toggleVideos}>(3)video works</span>
-                          <span style={{color: "black",
+                          <span className="remove_mob" style={{color: "black",
                                         textTransform: "lowercase",
                                         color: "white"}}>click to scroll</span>
                           </section>
 
                           <section className="video_main_container">
-                            {videosRendered}
                           </section>
-
+                            {videosRendered}
                           </div>
+                          </IdleTimer>
                         )
-                      }
+                      }if(this.state.intermezzoDisplay === true){
+                        const intermezzoArray = [];
+                        for(var i=0; i<4; i++){
+                           intermezzoArray.push(
+                            <section className="info_menu_intermezzo"
+                              key={i*3}>
+                               <span onClick={this._toggleIndex}>(1)index</span>
+                               <span onClick={this._toggleInfo}>(2)info</span>
+                               <span onClick={this._toggleVideos}>(3)video works</span>
+                             </section>
+                          );
+                        }
+                      return(
+                          <div>
+                            {intermezzoArray}
+                          </div>
+                      )
+                  }
+                    }
 }
-}
-
 export default App;
