@@ -6,6 +6,7 @@ import axios from 'axios';
 import IdleTimer from 'react-idle-timer';
 import Slider from "react-slick";
 import ReactDOMServer from 'react-dom/server';
+import Marquee3k from 'marquee3000';
 const preFix = "https://spreadsheets.google.com/feeds/list/";
 const sheetID = "1n2-gyTA4D4Qprxn_e4o2UEVz-E5mhTYelFaZnm_Aa1w";
 const postFix = "/od6/public/values?alt=json"
@@ -164,7 +165,6 @@ class App extends Component {
       videos: false,
       intermezzoDisplay: false
     })
-    console.log("here ---------");
   }
 
   _toggleVideos(e){
@@ -186,7 +186,7 @@ _onActive(e) {
 _onIdle(e) {
   console.log('user is not active', e)
   this.setState({
-    intermezzoDisplay: true
+    intermezzoDisplay: false
   })
 }
 
@@ -251,17 +251,16 @@ handleVolume(event) {
 
       return(
         <div key={i*3.3}>
-        <svg width="1280"
-             height="960"
-             viewBox="0 0 500 500" id="svg"
-             height="100%" width="100%"
+        <svg width="800" height="600" viewBox="0 0 800 600"
+            id="svg"
              preserveAspectRatio="none">
           <path
+           transform="scale(3,1.2)"
           id="curve"
           fill="transparent"
-          d="M3.858,58.607c16.784-5.985,33.921-10.518,51.695-12.99c50.522-7.028,101.982,0.51,151.892,8.283c17.83,2.777,35.632,5.711,53.437,8.628	c51.69,8.469,103.241,11.438,155.3,3.794c53.714-7.887,106.383-20.968,159.374-32.228c11.166-2.373,27.644-7.155,39.231-4.449" />
+          d="M 10 100 C 200 30 300 250 350 50" />
           <text id="svg_text" fill="white">
-            <textPath xlinkHref="#curve">
+            <textPath className="text_path">
               {ele.gsx$additionaltxt.$t}
 
 
@@ -279,8 +278,7 @@ handleVolume(event) {
   }
 
   const itemsToRender_Thumbnails = this.state.thumbnails_data
-                      .map((ele, i) => {
-
+      .map((ele, i) => {
       if(ele.gsx$link.$t.length > 0){
       return (
       <ImagesRandom
@@ -377,7 +375,7 @@ _onMouseMove(e){
         element={document}
         onActive={this.onActive}
         onIdle={this.onIdle}
-        timeout={4000}>
+        timeout={4000*3}>
 
         <div id="slider" className="App" style={styles}
              onClick={this._onMouseClick}
@@ -465,7 +463,7 @@ _onMouseMove(e){
                 element={document}
                 onActive={this.onActive}
                 onIdle={this.onIdle}
-                timeout={4000}>
+                timeout={4000*3}>
 
                  <div id="no_background" className="App" style={styles}
                   onClick={this._onMouseClick}
@@ -516,7 +514,7 @@ _onMouseMove(e){
                     element={document}
                     onActive={this.onActive}
                     onIdle={this.onIdle}
-                    timeout={4000}>
+                    timeout={4000*3}>
                         <div className="img_thumbnails" key={i*3.33}>
                         <img src={ele.gsx$link.$t}
                         className={returnRandomScale()}
@@ -535,7 +533,7 @@ _onMouseMove(e){
                   element={document}
                   onActive={this.onActive}
                   onIdle={this.onIdle}
-                  timeout={4000}>
+                  timeout={4000*3}>
                   <div className="App" style={styles}
                   onKeyPress={this._handleKeyPress}
                   tabIndex="0">
@@ -560,7 +558,7 @@ _onMouseMove(e){
                   element={document}
                   onActive={this.onActive}
                   onIdle={this.onIdle}
-                  timeout={4000}>
+                  timeout={4000*3}>
 
                   <div>
                     <section className="img_thumbnails_focus"
@@ -601,12 +599,7 @@ _onMouseMove(e){
                         })
 
                         return(
-                          <IdleTimer
-                          ref={ref => { this.idleTimer = ref }}
-                          element={document}
-                          onActive={this.onActive}
-                          onIdle={this.onIdle}
-                          timeout={4000}>
+
 
                           <div className="App_videos"
                           onKeyPress={this._handleKeyPress}
@@ -618,14 +611,14 @@ _onMouseMove(e){
                           <span className="selected" onClick={this._toggleVideos}>(3)video works</span>
                           <span className="remove_mob" style={{color: "black",
                                         textTransform: "lowercase",
-                                        color: "white"}}>click to scroll</span>
+                                        display: "none",
+                                        color: "white"}}>hover to add sound</span>
                           </section>
 
                           <section className="video_main_container">
                           </section>
                             {videosRendered}
                           </div>
-                          </IdleTimer>
                         )
                       }if(this.state.intermezzoDisplay === true){
                         const intermezzoArray = [];

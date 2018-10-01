@@ -13,12 +13,14 @@ class Videos extends Component {
       videoIndex: 0,
       volume: 1,
       paused: false,
+      muted: false
     };
 
     this.handlePause = this.handlePause.bind(this);
     this.handlePlayerPause = this.handlePlayerPause.bind(this);
     this.handlePlayerPlay = this.handlePlayerPlay.bind(this);
     this.handleVolume = this.handleVolume.bind(this);
+    this._onHoverSound = this._onHoverSound.bind(this);
   }
 
   componentDidMount(){
@@ -45,6 +47,7 @@ class Videos extends Component {
    this.setState({ paused: false });
  }
 
+
  handleVolume(event) {
    this.setState({
      volume: parseFloat(event.target.value),
@@ -52,23 +55,24 @@ class Videos extends Component {
    console.log("this shit is working", this.state.volume);
  }
 
+   _onHoverSound() {
+     console.log("hover!");
+   }
+
     render() {
 
       const { videoIndex, paused, volume } = this.state;
 
       return(
-        <section className="video_container">
+        <section
+        className="video_container"
+        onMouseEnter={this._onHoverSound}>
               <section className="vimeo_embed">
               <Vimeo
-                  autoplay
-                  background={true}
-                  background={false}
                   width={1296}
                   height={540}
-                  autoplay
+                  muted={false}
                   video={this.props.videos_data.gsx$link.$t}
-                  onPause={this.handlePlayerPause}
-                  onPlay={this.handlePlayerPlay}
                 />
               <div className="control_vimeo">
               <div className="control_vimeo_inner">

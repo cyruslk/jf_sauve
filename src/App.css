@@ -93,6 +93,10 @@ a{
   background-color: "black"
 }
 
+.text_path{
+  font-size: 3vw;
+}
+
 .loader span{
   font-family: Dia-Bold;
   font-size: 20vw;
@@ -487,7 +491,7 @@ a{
 #svg{
   position: absolute;
   left: 0;
-  top:-10vw;
+  top:2vw;
 }
 
 #svg_text{
@@ -538,6 +542,7 @@ a{
 .control_vimeo_inner div:last-child{
   display: flex;
   width: 30%;
+  display: none;
 }
 
 .control_vimeo_inner div:first-child span{
