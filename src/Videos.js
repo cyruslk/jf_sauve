@@ -20,7 +20,7 @@ class Videos extends Component {
     this.handlePlayerPause = this.handlePlayerPause.bind(this);
     this.handlePlayerPlay = this.handlePlayerPlay.bind(this);
     this.handleVolume = this.handleVolume.bind(this);
-    this._onHoverSound = this._onHoverSound.bind(this);
+    this._tiggerSound = this._tiggerSound.bind(this);
   }
 
   componentDidMount(){
@@ -44,7 +44,7 @@ class Videos extends Component {
  }
 
  handlePlayerPlay() {
-   this.setState({ paused: false });
+   this.setState({ paused: true });
  }
 
 
@@ -55,7 +55,7 @@ class Videos extends Component {
    console.log("this shit is working", this.state.volume);
  }
 
-   _onHoverSound() {
+   _tiggerSound() {
      console.log("hover!");
    }
 
@@ -66,12 +66,13 @@ class Videos extends Component {
       return(
         <section
         className="video_container"
-        onMouseEnter={this._onHoverSound}>
+        style={{backgroundColor: '#'+Math.random().toString(16).substr(-6)}}
+        onMouseEnter={this._tiggerSound}
+        onMouseLeave={this._removeSound}>
               <section className="vimeo_embed">
               <Vimeo
                   width={1296}
                   height={540}
-                  muted={false}
                   video={this.props.videos_data.gsx$link.$t}
                 />
               <div className="control_vimeo">
@@ -85,16 +86,7 @@ class Videos extends Component {
                  type="checkbox"
                  id="paused"
                  checked={paused}
-                 onChange={this.handlePause}
                />
-              <input
-                type="range"
-                value={volume}
-                min={0}
-                max={1}
-                step={0.01}
-                onChange={this.handleVolume}
-              />
               </div>
               </div>
               </div>

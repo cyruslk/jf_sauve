@@ -1,4 +1,4 @@
-@font-face {
+z@font-face {
   font-family: 'Canela-Black';
   src: url('fonts/Canela-Black.otf'); /* IE9 Compat Modes */
 }
@@ -173,7 +173,7 @@ a{
   font-family: Canela-Light;
   color: white;
   line-height: 100%;
-  font-size: 3.4vw;
+  font-size: 3vw;
 }
 
 .info_menu_intermezzo{
@@ -487,18 +487,28 @@ a{
   flex-direction: column;
 }
 
-
-#svg{
-  position: absolute;
-  left: 0;
-  top:2vw;
+#svg_container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  transform: scale(0.75);
 }
 
+#svg {
+  width: 100vw;
+  height: 131vh;
+}
+
+
 #svg_text{
-  font-size: 2vw;
+  font-size: 10vw;
   font-family: Dia-Bold;
   color: white;
 }
+
+
 
 
 .first_slider{
@@ -509,7 +519,6 @@ a{
 
 .vimeo_embed{
   margin-bottom: 2vw;
-  background-color: #181818;
   height: 100vh;
   display: flex;
   align-items: center;

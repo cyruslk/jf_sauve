@@ -6,7 +6,6 @@ import axios from 'axios';
 import IdleTimer from 'react-idle-timer';
 import Slider from "react-slick";
 import ReactDOMServer from 'react-dom/server';
-import Marquee3k from 'marquee3000';
 const preFix = "https://spreadsheets.google.com/feeds/list/";
 const sheetID = "1n2-gyTA4D4Qprxn_e4o2UEVz-E5mhTYelFaZnm_Aa1w";
 const postFix = "/od6/public/values?alt=json"
@@ -250,25 +249,22 @@ handleVolume(event) {
     }else{
 
       return(
-        <div key={i*3.3}>
-        <svg width="800" height="600" viewBox="0 0 800 600"
-            id="svg"
-             preserveAspectRatio="none">
-          <path
-           transform="scale(3,1.2)"
-          id="curve"
-          fill="transparent"
-          d="M 10 100 C 200 30 300 250 350 50" />
-          <text id="svg_text" fill="white">
-            <textPath className="text_path">
-              {ele.gsx$additionaltxt.$t}
+        <div key={3} id="svg_container">
+         <svg
+         viewBox="0 0 2000 1000"
+         id="svg">
+           <path d="M0,0S2881.2,181.49,1584.66,867.11,612.58,363,612.58,363"
+           fill="transparent" id="curve"/>
+           <text id="svg_text" x="0" y="0" fill="white">
+             <textPath xlinkHref="#curve">
+               {ele.gsx$additionaltxt.$t}
 
 
-            </textPath>
-          </text>
-          </svg>
-        </div>
-      )
+             </textPath>
+           </text>
+           </svg>
+         </div>
+       )
     }
   })
 
@@ -396,7 +392,7 @@ _onMouseMove(e){
             {this.state.slider_data.length}
             </section>
             <section className="info_menu">
-            <span onClick={this._toggleIndex}>(1)index</span>
+            <span onClick={this._toggleIndex}>(1)PHOTOS</span>
             <span onClick={this._toggleInfo}>(2)info</span>
             <span onClick={this._toggleVideos}>(3)video works</span>
             </section>
@@ -490,7 +486,7 @@ _onMouseMove(e){
                          </section>
                          <section className="black info_menu">
                          <span onClick={this._toggleMain}> ←← </span>
-                         <span onClick={this._toggleIndex}>(1)index</span>
+                         <span onClick={this._toggleIndex}>(1)PHOTOS</span>
                          <span className="selected" onClick={this._toggleInfo}>(2)info</span>
                          <span onClick={this._toggleVideos}>(3)video works</span>
                          </section>
@@ -542,7 +538,7 @@ _onMouseMove(e){
                     </section>
                       <section id="info_menu_index" className="info_menu">
                       <span onClick={this._toggleMain}> ←← </span>
-                      <span className="selected" onClick={this._toggleIndex}>(1)index</span>
+                      <span className="selected" onClick={this._toggleIndex}>(1)PHOTOS</span>
                       <span onClick={this._toggleInfo}>(2)info</span>
                       <span onClick={this._toggleVideos}>(3)video works</span>
                       <span style={{color: "black", textTransform: "lowercase"}}>click to open</span>
@@ -606,7 +602,7 @@ _onMouseMove(e){
                           tabIndex="0">
                           <section id="info_menu_index" className="black info_menu">
                           <span onClick={this._toggleMain}>←←</span>
-                          <span onClick={this._toggleIndex}>(1)index</span>
+                          <span onClick={this._toggleIndex}>(1)PHOTOS</span>
                           <span onClick={this._toggleInfo}>(2)info</span>
                           <span className="selected" onClick={this._toggleVideos}>(3)video works</span>
                           <span className="remove_mob" style={{color: "black",
@@ -626,7 +622,7 @@ _onMouseMove(e){
                            intermezzoArray.push(
                             <section className="info_menu_intermezzo"
                               key={i*3}>
-                               <span onClick={this._toggleIndex}>(1)index</span>
+                               <span onClick={this._toggleIndex}>(1)PHOTOS</span>
                                <span onClick={this._toggleInfo}>(2)info</span>
                                <span onClick={this._toggleVideos}>(3)video works</span>
                              </section>
