@@ -185,7 +185,7 @@ _onActive(e) {
 _onIdle(e) {
   console.log('user is not active', e)
   this.setState({
-    intermezzoDisplay: false
+    intermezzoDisplay: true
   })
 }
 
@@ -253,12 +253,15 @@ handleVolume(event) {
          <svg
          viewBox="0 0 2000 1000"
          id="svg">
-           <path d="M0,0S2881.2,181.49,1584.66,867.11,612.58,363,612.58,363"
+           <path d="M83.88,77.57S2713.35,233,1530.08,820.12,642.93,388.4,642.93,388.4"
            fill="transparent" id="curve"/>
            <text id="svg_text" x="0" y="0" fill="white">
              <textPath xlinkHref="#curve" startOffset="100%">
                {ele.gsx$additionaltxt.$t}
-             </textPath>
+               <animate attributeName="startOffset"
+               from="100%" to="-180%"
+               begin="0s" dur="15s" repeatCount="indefinite"/>
+            </textPath>
            </text>
            </svg>
          </div>
@@ -616,18 +619,26 @@ _onMouseMove(e){
                         )
                       }if(this.state.intermezzoDisplay === true){
                         const intermezzoArray = [];
-                        for(var i=0; i<4; i++){
+                        for(var i=0; i<2; i++){
                            intermezzoArray.push(
                             <section className="info_menu_intermezzo"
                               key={i*3}>
-                               <span onClick={this._toggleIndex}>(1)PHOTOS</span>
-                               <span onClick={this._toggleInfo}>(2)info</span>
-                               <span onClick={this._toggleVideos}>(3)video works</span>
+                              <svg
+                              viewBox="0 0 800 960"
+                              id="svg_intermezzo">
+                                <path d="M41.94,77.57S1356.67,233,765,820.12,321.47,388.4,321.47,388.4"
+                                fill="transparent" id="curve"/>
+                                <text id="svg_text" x="0" y="0" fill="white">
+                                  <textPath xlinkHref="#curve" startOffset="0%">
+                                  kkkkk kkkkk kkkkk kkkkk kkkkk kkkkk
+                                 </textPath>
+                                </text>
+                                </svg>
                              </section>
                           );
                         }
                       return(
-                          <div>
+                          <div className="intermezzo_container">
                             {intermezzoArray}
                           </div>
                       )

@@ -173,41 +173,28 @@ a{
   font-family: Canela-Light;
   color: white;
   line-height: 100%;
-  font-size: 3vw;
+  font-size: 2.9vw;
+}
+
+.intermezzo_container{
+  display: flex;
+}
+
+#svg_intermezzo{
+  transform: scale(1);
+  padding: 9vw;
 }
 
 .info_menu_intermezzo{
-  width: 100vw;
-  height: 25vh;
+  width: 50vw;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  flex-direction: column;
 }
 
-.info_menu_intermezzo:first-child{
-  animation-duration: 10s;
-  animation-name: marquee_left;
-  animation-iteration-count: infinite;
-}
 
-.info_menu_intermezzo:nth-child(2){
-  animation-duration: 10s;
-  animation-name: marquee_right;
-  animation-iteration-count: infinite;
-}
-
-.info_menu_intermezzo:nth-child(3){
-  animation-duration: 10s;
-  animation-name: marquee_left;
-  animation-iteration-count: infinite;
-}
-
-.info_menu_intermezzo:nth-child(4){
-  animation-duration: 10s;
-  animation-name: marquee_right;
-  animation-iteration-count: infinite;
-}
 
 .info_menu_intermezzo span{
   text-transform: uppercase;

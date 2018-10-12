@@ -4,3 +4,12 @@ https://codepen.io/chris-creditdesign/pen/blJty
 https://react-move.js.org/#/documentation/animate
 http://oreillymedia.github.io/svg-essentials-examples/ch09/start_offset.html
 https://stackoverflow.com/questions/35838536/svg-textpath-animate-startoffset-text-to-slide-down-svg-path-in-js
+
+
+<animate attributeName="startOffset"
+from="100%" to ="-80%"
+begin="0s" dur="10s" repeatCount="indefinite"/>
+
+
+
+<path d="M77.33,43.5c0,548.87,789.57,993,1765.33,993"
