@@ -256,10 +256,8 @@ handleVolume(event) {
            <path d="M0,0S2881.2,181.49,1584.66,867.11,612.58,363,612.58,363"
            fill="transparent" id="curve"/>
            <text id="svg_text" x="0" y="0" fill="white">
-             <textPath xlinkHref="#curve">
+             <textPath xlinkHref="#curve" startOffset="100%">
                {ele.gsx$additionaltxt.$t}
-
-
              </textPath>
            </text>
            </svg>
