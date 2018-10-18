@@ -119,6 +119,19 @@ a{
   justify-content: center;
 }
 
+
+.flasher{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flasher img{
+  max-height: 98vh;
+}
+
 .main_info{
   width: 100vw;
   position: absolute;
@@ -494,8 +507,6 @@ a{
   font-family: Dia-Bold;
   color: white;
 }
-
-
 
 
 .first_slider{

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import './App.css';
 import ImagesRandom from "./ImagesRandom.js";
 import Videos from "./Videos.js";
+import Flasher from "./Flasher.js";
 import axios from 'axios';
 import IdleTimer from 'react-idle-timer';
-import Slider from "react-slick";
 import ReactDOMServer from 'react-dom/server';
 const preFix = "https://spreadsheets.google.com/feeds/list/";
 const sheetID = "1n2-gyTA4D4Qprxn_e4o2UEVz-E5mhTYelFaZnm_Aa1w";
@@ -19,6 +20,9 @@ class App extends Component {
        this.state = {
          backgroundColour: '#'+Math.random().toString(16).substr(-6),
          counter: 0,
+         timerFlicker: 0,
+         styleFlicker: "",
+         flickr_data: "",
          displayThumbnails: false,
          display_lightbox: "none",
          img_links: "",
@@ -56,12 +60,16 @@ class App extends Component {
 
   }
 
+
   componentDidMount(){
     document.addEventListener("keydown", this._handleKeyPress.bind(this));
     document.body.style.backgroundColor = "black";
      axios.get(spreadsheetURL)
      .then((response) => {
        const shuffledResponse = _.shuffle(response.data.feed.entry);
+       this.setState({
+         flickr_data: shuffledResponse.filter(ele => ele.gsx$section.$t === "flickr_img")
+       })
        this.setState({
          slider_data: shuffledResponse.filter(ele => ele.gsx$section.$t === "slider"),
        })
@@ -92,6 +100,7 @@ class App extends Component {
      });
      console.log(this.state.info_data);
     }
+
 
  updateWindowDimensions() {
     this.setState({
@@ -185,10 +194,9 @@ _onActive(e) {
 _onIdle(e) {
   console.log('user is not active', e)
   this.setState({
-    intermezzoDisplay: true
+    intermezzoDisplay: false
   })
 }
-
 
 handlePause(event) {
   this.setState({
@@ -219,8 +227,7 @@ handleVolume(event) {
      counter: actualCounter
    })
    this.setState({
-     image_caption_slider: this.state.slider_data[this.state.counter]
-                           .gsx$caption.$t
+     image_caption_slider: this.state.slider_data[this.state.counter].gsx$caption.$t
    })
    if(this.state.slider_data.length === this.state.counter+1){
      this.setState({
@@ -317,7 +324,6 @@ _onMouseMove(e){
    })
  }
 
-
   render() {
     let styles = {
       width: "100vw",
@@ -366,6 +372,11 @@ _onMouseMove(e){
      && this.state.index === false
      && this.state.intermezzoDisplay === false){
 
+       if(this.state.timerFlicker === this.state.flickr_data.length-1){
+         clearInterval(this.interval);
+         this.removeDiv();
+       }
+
       return (
         <IdleTimer
         ref={ref => { this.idleTimer = ref }}
@@ -373,6 +384,8 @@ _onMouseMove(e){
         onActive={this.onActive}
         onIdle={this.onIdle}
         timeout={4000*3}>
+
+      <Flasher />
 
         <div id="slider" className="App" style={styles}
              onClick={this._onMouseClick}

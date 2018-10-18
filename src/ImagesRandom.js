@@ -38,6 +38,7 @@ class ImagesRandom extends Component {
       if(this.props.slider === 0){
       return(
         <div className="img_thumbnails">
+          vtrtrtrgrtgrgrxwx/x
             <img
             src={this.props.imgLink}
             className={this.props.className}
