@@ -48,6 +48,7 @@ class ImagesRandom extends Component {
     }else{
       return(
         <div className="img_thumbnails">
+            -------
             <img
             src={this.props.imgLink}
             />

@@ -14,7 +14,8 @@ class Flasher extends Component {
          super(props);
          this.state = {
            seconds: 0,
-           flickr_data: ""
+           flickr_data: "",
+           display: "none"
          };
        }
 
@@ -24,7 +25,11 @@ class Flasher extends Component {
          }));
        }
 
+
        componentDidMount(){
+         this.setState({
+           display: this.props.display
+         })
           axios.get(spreadsheetURL)
           .then((response) => {
             const shuffledResponse = _.shuffle(response.data.feed.entry);
@@ -53,6 +58,7 @@ class Flasher extends Component {
        }
 
        render() {
+
          if(this.state.flickr_data.length === 0){
            return(
              <div className="loader">
@@ -61,13 +67,18 @@ class Flasher extends Component {
                </span>
              </div>
            )
+         }else if(this.state.flickr_data.length-1 === this.state.seconds || this.props.diplay === "none"){
+           return(
+              <div>
+              </div>
+           )
          }else{
            return(
-               <div className="flasher"
-               style={{backgroundColor: "black", display: this.state.styleFlicker}}
-               id="container">
-                 <img src={this.state.flickr_data[this.state.seconds].gsx$link.$t} />
-               </div>
+             <div className="flasher"
+             style={{backgroundColor: "black", display: this.state.styleFlicker}}
+             id="container">
+               <img src={this.state.flickr_data[this.state.seconds].gsx$link.$t} />
+             </div>
            )
          }
        }

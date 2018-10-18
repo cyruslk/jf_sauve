@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './App.css';
-import ImagesRandom from "./ImagesRandom.js";
 import Videos from "./Videos.js";
 import Flasher from "./Flasher.js";
+import Slider from "./Slider.js";
+import Thumbnails from "./Thumbnails.js";
 import axios from 'axios';
 import IdleTimer from 'react-idle-timer';
 import ReactDOMServer from 'react-dom/server';
+import getRandomPathIndex from './SvgPaths.js';
+import getRandomPathIntermezzo from './SvgPathsIntermezzo.js';
 const preFix = "https://spreadsheets.google.com/feeds/list/";
 const sheetID = "1n2-gyTA4D4Qprxn_e4o2UEVz-E5mhTYelFaZnm_Aa1w";
 const postFix = "/od6/public/values?alt=json"
@@ -21,6 +24,7 @@ class App extends Component {
          backgroundColour: '#'+Math.random().toString(16).substr(-6),
          counter: 0,
          timerFlicker: 0,
+         displayFlasher: "block",
          styleFlicker: "",
          flickr_data: "",
          displayThumbnails: false,
@@ -50,7 +54,6 @@ class App extends Component {
        this.idleTimer = null;
        this.onActive = this._onActive.bind(this)
        this.onIdle = this._onIdle.bind(this)
-       this._onMouseClick = this._onMouseClick.bind(this);
        this._onMouseMove = this._onMouseMove.bind(this);
        this._toggleInfo = this._toggleInfo.bind(this);
        this._toggleIndex = this._toggleIndex.bind(this);
@@ -153,7 +156,8 @@ class App extends Component {
       index: false,
       info: true,
       videos: false,
-      intermezzoDisplay: false
+      intermezzoDisplay: false,
+      displayFlasher: "none"
     })
   }
 
@@ -162,7 +166,8 @@ class App extends Component {
       index: false,
       info: false,
       videos: false,
-      intermezzoDisplay: false
+      intermezzoDisplay: false,
+      displayFlasher: "none"
     })
   }
 
@@ -171,7 +176,8 @@ class App extends Component {
       index: true,
       info: false,
       videos: false,
-      intermezzoDisplay: false
+      intermezzoDisplay: false,
+      displayFlasher: "none"
     })
   }
 
@@ -180,7 +186,8 @@ class App extends Component {
       index: false,
       info: false,
       videos: true,
-      intermezzoDisplay: false
+      intermezzoDisplay: false,
+      displayFlasher: "none"
     })
   }
 
@@ -194,7 +201,7 @@ _onActive(e) {
 _onIdle(e) {
   console.log('user is not active', e)
   this.setState({
-    intermezzoDisplay: false
+    intermezzoDisplay: true
   })
 }
 
@@ -219,89 +226,6 @@ handleVolume(event) {
 }
 
 
- _onMouseClick(e){
-   const  newCol = '#'+Math.random().toString(16).substr(-6);
-   const actualCounter = this.state.counter + 1
-   this.setState({
-     backgroundColour: newCol,
-     counter: actualCounter
-   })
-   this.setState({
-     image_caption_slider: this.state.slider_data[this.state.counter].gsx$caption.$t
-   })
-   if(this.state.slider_data.length === this.state.counter+1){
-     this.setState({
-       counter: 0
-     });
-   }
-
-   function returnRandom(){
-     let leftOrRight = ["left", "right"]
-     return leftOrRight[Math.floor(Math.random() * leftOrRight.length)];
-   }
-
-  const itemsToRender_slider = this.state.slider_data
-                      .slice(this.state.counter, this.state.counter+1)
-                      .map((ele, i) => {
-
-  const randomLeftOrRight = { [returnRandom()]: 0, display: "block"};
-
-      if(ele.gsx$link.$t.length > 0){
-      return (
-        <div key={i*3}>
-          <img src={ele.gsx$link.$t} alt={`img${i}`} key={i*3}
-          style={randomLeftOrRight}/>
-        </div>
-      )
-    }else{
-
-      return(
-        <div key={3} id="svg_container">
-         <svg
-         viewBox="0 0 2000 1000"
-         id="svg">
-           <path d="M83.88,77.57S2713.35,233,1530.08,820.12,642.93,388.4,642.93,388.4"
-           fill="transparent" id="curve"/>
-           <text id="svg_text" x="0" y="0" fill="white">
-             <textPath xlinkHref="#curve" startOffset="100%">
-               {ele.gsx$additionaltxt.$t}
-               <animate attributeName="startOffset"
-               from="100%" to="-180%"
-               begin="0s" dur="15s" repeatCount="indefinite"/>
-            </textPath>
-           </text>
-           </svg>
-         </div>
-       )
-    }
-  })
-
-  function returnRandomScale(){
-    const scaleClass = ["scale_04","scale_05","scale_06","scale_07", "scale_08", "scale_09", "scale_1"];
-    return scaleClass[Math.floor(Math.random()*scaleClass.length)]
-  }
-
-  const itemsToRender_Thumbnails = this.state.thumbnails_data
-      .map((ele, i) => {
-      if(ele.gsx$link.$t.length > 0){
-      return (
-      <ImagesRandom
-      key={i}
-      imgLink={ele.gsx$link.$t}
-      thumbnails_data={this.state.thumbnails_data}
-      className={returnRandomScale()}
-      slider={this.state.value}
-      id={i}
-      />
-      )
-    }
-  })
-
-  this.setState({
-    visible_data_slider: itemsToRender_slider,
-    visible_data_thumbnails: itemsToRender_Thumbnails,
-  })
- }
 
 _onMouseMove(e){
   this.setState({
@@ -383,41 +307,18 @@ _onMouseMove(e){
         element={document}
         onActive={this.onActive}
         onIdle={this.onIdle}
-        timeout={4000*3}>
-
-      <Flasher />
-
-        <div id="slider" className="App" style={styles}
-             onClick={this._onMouseClick}
-             onMouseMove={this._onMouseMove}
-             onKeyPress={this._handleKeyPress}
-             tabIndex="0">
-
-          <section className="main_info" style={style_clicker}>
-            <div>
-            <span>Jean François Sauvé</span>
-            <span>{this.state.image_caption_slider}</span>
-            </div>
-            </section>
-            <section className="counter_1 ">
-            {this.state.counter}
-            </section>
-            <section className="counter_2">
-            {this.state.slider_data.length}
-            </section>
-            <section className="info_menu">
-            <span onClick={this._toggleIndex}>(1)PHOTOS</span>
-            <span onClick={this._toggleInfo}>(2)info</span>
-            <span onClick={this._toggleVideos}>(3)video works</span>
-            </section>
-            <div className="main_slider_wrapper">
-            <section className="img_container">
-                {this.state.visible_data_slider}
-            </section>
-            </div>
-        </div>
+        timeout={4000*2}>
+          <Flasher diplay={this.state.displayFlasher}/>
+          <div style={{position: "relative"}}>
+              <section className="black info_menu">
+              <span onClick={this._toggleMain}> ←← </span>
+              <span onClick={this._toggleIndex}>(1)PHOTOS</span>
+              <span className="selected" onClick={this._toggleInfo}>(2)info</span>
+              <span onClick={this._toggleVideos}>(3)video works</span>
+              </section>
+          <Slider />
+          </div>
         </IdleTimer>
-
       );
     }else if(this.state.info_data.length > 0
      && this.state.info === true
@@ -473,7 +374,7 @@ _onMouseMove(e){
                 element={document}
                 onActive={this.onActive}
                 onIdle={this.onIdle}
-                timeout={4000*3}>
+                timeout={4000*2}>
 
                  <div id="no_background" className="App" style={styles}
                   onClick={this._onMouseClick}
@@ -524,12 +425,11 @@ _onMouseMove(e){
                     element={document}
                     onActive={this.onActive}
                     onIdle={this.onIdle}
-                    timeout={4000*3}>
-                        <div className="img_thumbnails" key={i*3.33}>
+                    timeout={4000*2}>
+                        <div className="img_thumbnails" key={i}>
                         <img src={ele.gsx$link.$t}
                         className={returnRandomScale()}
                         onClick={() => this.handleSortEnter(ele.gsx$link.$t, i)}
-                        key={i*3.33}
                         />
                   </div>
                   </IdleTimer>
@@ -543,7 +443,7 @@ _onMouseMove(e){
                   element={document}
                   onActive={this.onActive}
                   onIdle={this.onIdle}
-                  timeout={4000*3}>
+                  timeout={4000*2}>
                   <div className="App" style={styles}
                   onKeyPress={this._handleKeyPress}
                   tabIndex="0">
@@ -568,7 +468,7 @@ _onMouseMove(e){
                   element={document}
                   onActive={this.onActive}
                   onIdle={this.onIdle}
-                  timeout={4000*3}>
+                  timeout={4000*2}>
 
                   <div>
                     <section className="img_thumbnails_focus"
@@ -631,19 +531,36 @@ _onMouseMove(e){
                           </div>
                         )
                       }if(this.state.intermezzoDisplay === true){
+
+
                         const intermezzoArray = [];
                         for(var i=0; i<2; i++){
+
                            intermezzoArray.push(
                             <section className="info_menu_intermezzo"
                               key={i*3}>
                               <svg
                               viewBox="0 0 800 960"
                               id="svg_intermezzo">
-                                <path d="M41.94,77.57S1356.67,233,765,820.12,321.47,388.4,321.47,388.4"
+                                <path d={getRandomPathIntermezzo()}
                                 fill="transparent" id="curve"/>
-                                <text id="svg_text" x="0" y="0" fill="white">
+                                <text id="svg_text_intermezzo"
+                                x="0" y="0" fill={'#'+Math.random().toString(16).substr(-6)}>
                                   <textPath xlinkHref="#curve" startOffset="0%">
-                                  kkkkk kkkkk kkkkk kkkkk kkkkk kkkkk
+                                  <a className="links_intermezzo"
+                                  onClick={this._toggleMain}>SLIDER</a>
+                                  <a style={{visibility: "hidden"}}>-___-</a>
+                                  <a className="links_intermezzo"
+                                  onClick={this._toggleIndex}>INDEX</a>
+                                  <a style={{visibility: "hidden"}}>-___-</a>
+                                  <a className="links_intermezzo"
+                                  onClick={this._toggleInfo}>INFO</a>
+                                  <a style={{visibility: "hidden"}}>-___-</a>
+                                  <a className="links_intermezzo"
+                                  onClick={this._toggleVideos}>VIDÉOS</a>
+                                  <animate attributeName="startOffset"
+                                  from="100%" to="-180%"
+                                  begin="0s" dur="15s" repeatCount="indefinite"/>
                                  </textPath>
                                 </text>
                                 </svg>
@@ -651,8 +568,8 @@ _onMouseMove(e){
                           );
                         }
                       return(
-                          <div className="intermezzo_container">
-                            {intermezzoArray}
+                          <div className="intermezzo_container" style={{backgroundColor: "black"}}>
+                          {intermezzoArray}
                           </div>
                       )
                   }

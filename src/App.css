@@ -129,7 +129,10 @@ a{
 }
 
 .flasher img{
-  max-height: 98vh;
+  width: 102vw;
+  height: auto;
+  top: 0;
+  margin: 0;
 }
 
 .main_info{
@@ -199,7 +202,7 @@ a{
 }
 
 .info_menu_intermezzo{
-  width: 50vw;
+  width: 47vw;
   height: 100vh;
   display: flex;
   align-items: center;
@@ -505,8 +508,20 @@ a{
 #svg_text{
   font-size: 10vw;
   font-family: Dia-Bold;
-  color: white;
+  text-transform: uppercase;
 }
+
+#svg_text_intermezzo{
+  font-size: 10vw;
+  font-family: Canela-Light;
+  text-transform: uppercase;
+}
+
+
+.links_intermezzo{
+  margin-left: 3vw;
+}
+
 
 
 .first_slider{
