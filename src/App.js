@@ -201,7 +201,7 @@ _onActive(e) {
 _onIdle(e) {
   console.log('user is not active', e)
   this.setState({
-    intermezzoDisplay: true
+    intermezzoDisplay: false
   })
 }
 
@@ -310,7 +310,7 @@ _onMouseMove(e){
         timeout={4000*2}>
           <Flasher diplay={this.state.displayFlasher}/>
           <div style={{position: "relative"}}>
-              <section className="black info_menu">
+              <section className="white info_menu">
               <span onClick={this._toggleMain}> ←← </span>
               <span onClick={this._toggleIndex}>(1)PHOTOS</span>
               <span className="selected" onClick={this._toggleInfo}>(2)info</span>

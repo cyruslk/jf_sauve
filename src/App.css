@@ -511,6 +511,7 @@ a{
   text-transform: uppercase;
 }
 
+
 #svg_text_intermezzo{
   font-size: 10vw;
   font-family: Canela-Light;
@@ -734,6 +735,22 @@ and (orientation : portrait) {
   and (-webkit-min-device-pixel-ratio: 2)
   and (orientation: portrait) {
 
+    #svg_text_intermezzo{
+          font-size: 43vw;
+    }
+
+    #svg_text{
+      font-size: 60vw;
+    }
+
+    #videos{
+      margin-top: 0;
+    }
+
+    .video_container{
+      height: 100vh;
+    }
+
     .info_menu{
       justify-content: center;
       flex-direction: column;
@@ -770,14 +787,30 @@ and (orientation : portrait) {
       position: fixed;
     }
 
+    .white{
+      background-color: transparent;
+      bottom: 0;
+      left: 0;
+      position: fixed;
+    }
+
     .about_page .secon_about {
       padding: 2vw;
       padding-bottom: 60vw;
     }
 
+    .about_page .secon_about div:first-child{
+      margin-right: 1vw;
+    }
+    .about_page .secon_about div:last-child{
+      margin-left: 1vw;
+    }
+
     .about_page .secon_about a{
-        font-size: 6.2vw;
+        font-size: 4.6vw;
         line-height: 120%;
+        word-wrap: break-word;
+
     }
 
     .black span{
@@ -859,21 +892,166 @@ and (orientation : portrait) {
       .vimeo_embed{
         height: auto;
       }
-
-      .App_videos #videos:last-child{
-        margin-bottom: 60vw;
-      }
-
-
 }
 
 
 
-/* IPHONE PORTRAIT */
-@media only screen
-  and (min-device-width: 320px)
-  and (max-device-width: 568px)
-  and (-webkit-min-device-pixel-ratio: 2)
-  and (orientation: landscape) {
+@media screen and (max-width: 520px) {
+  #svg_text_intermezzo{
+        font-size: 43vw;
+  }
 
+  #svg_text{
+    font-size: 60vw;
+  }
+
+  #videos{
+    margin-top: 0;
+  }
+
+  .video_container{
+    height: 100vh;
+  }
+
+  .info_menu{
+    justify-content: center;
+    flex-direction: column;
+    bottom: 2vh;
+    top: auto;
+    width: 100vw;
+    position: fixed;
+  }
+
+  .img_thumbnails_container{
+    padding: 0;
+    margin: 0;
+  }
+
+  .about_page .span_main_text{
+    font-size: 11.4vw;
+  }
+
+  .about_page .main_about .sec_span_about,
+  .about_page .secon_about span{
+    font-size: 7.2vw;
+    color: white;
+    margin-bottom: 3vw;
+  }
+
+  .secon_about{
+    padding-bottom: 142vw;
+  }
+
+  .black{
+    background-color: white;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+  }
+
+  .white{
+    background-color: transparent;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+  }
+
+  .about_page .secon_about {
+    padding: 2vw;
+    padding-bottom: 60vw;
+  }
+
+  .about_page .secon_about div:first-child{
+    margin-right: 1vw;
+  }
+  .about_page .secon_about div:last-child{
+    margin-left: 1vw;
+  }
+
+  .about_page .secon_about a{
+      font-size: 4.6vw;
+      line-height: 120%;
+      word-wrap: break-word;
+
+  }
+
+  .black span{
+    color: black;
+  }
+
+  .main_about{
+    padding: 2vw;
+  }
+
+  #no_background{
+    background-color: transparent !important;
+  }
+
+  .remove_mob{
+    display: none;
+  }
+
+
+  .about_page .secon_about div{
+    width: 50vw;
+  }
+
+  .img_thumbnails{
+    margin: 0;
+    padding: 0;
+  }
+
+  .info_menu span{
+    font-size: 9.6vw;
+    line-height: 90%;
+    color: black;
+  }
+
+  .img_container div img{
+    width: 70vw;
+    height: auto;
+    position: inherit;
+  }
+
+  .main_info{
+    display: none;
+  }
+
+  .img_container div{
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .img_container div img{
+      top: auto;
+    }
+
+    .img_thumbnails{
+        width: 100vw;
+    }
+
+    .img_thumbnails img{
+        width: 100vw;
+        height: auto;
+    }
+
+    .img_thumbnails_focus img{
+      max-width: 90vw;
+    }
+
+    iframe{
+      width: 80vw;
+      height: auto;
+    }
+
+    .control_vimeo{
+      display: none;
+    }
+
+    .vimeo_embed{
+      height: auto;
+    }
 }
