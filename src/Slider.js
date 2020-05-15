@@ -35,7 +35,6 @@ class Slider extends Component {
           this.setState({
             slider_data: shuffledResponse.filter(ele => ele.gsx$section.$t === "slider"),
           })
-          console.log(this.state.slider_data, "------");
         })
         .catch(function (error) {
           console.log(error);

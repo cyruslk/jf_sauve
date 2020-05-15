@@ -24,7 +24,6 @@ class Videos extends Component {
   }
 
   componentDidMount(){
-    console.log(this.props.videos_data);
   }
 
   selectVideo(index) {
@@ -32,11 +31,9 @@ class Videos extends Component {
  }
 
  handlePause(event) {
-   console.log("this shit is working");
    this.setState({
      paused: event.target.checked,
    });
-   console.log(this.state.paused, "00000");
  }
 
  handlePlayerPause() {
@@ -52,11 +49,9 @@ class Videos extends Component {
    this.setState({
      volume: parseFloat(event.target.value),
    });
-   console.log("this shit is working", this.state.volume);
  }
 
    _tiggerSound() {
-     console.log("hover!");
    }
 
     render() {

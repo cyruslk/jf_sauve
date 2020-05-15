@@ -40,7 +40,6 @@ class Flasher extends Component {
           .catch(function (error) {
             console.log(error);
           });
-          console.log(this.state.info_data);
           this.interval = setInterval(() => this.tick(), 350);
          }
 
@@ -49,9 +48,7 @@ class Flasher extends Component {
        }
 
        componentDidUpdate(){
-         console.log(this.state);
          const lastTimer = this.state.flickr_data.length -1;
-         console.log(lastTimer);
          if(this.state.seconds === lastTimer){
            clearInterval(this.interval);
          }

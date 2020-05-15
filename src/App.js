@@ -101,7 +101,6 @@ class App extends Component {
      .catch(function (error) {
        console.log(error);
      });
-     console.log(this.state.info_data);
     }
 
 
@@ -134,7 +133,6 @@ class App extends Component {
   }
 
   handleSortEnter(imgLink, i) {
-     console.log(imgLink, i);
      this.setState({
        img_thumbnails_bigger: imgLink,
        img_thumbnails_index: i,
@@ -147,7 +145,6 @@ class App extends Component {
          img_thumbnails_bigger: "",
          display_lightbox: "none"
        })
-       console.log("here going there");
     }
 
 
@@ -192,16 +189,14 @@ class App extends Component {
   }
 
 _onActive(e) {
-  console.log('user is  active', e)
   this.setState({
     intermezzoDisplay: false
   })
 }
 
 _onIdle(e) {
-  console.log('user is not active', e)
   this.setState({
-    intermezzoDisplay: false
+    intermezzoDisplay: true
   })
 }
 
@@ -235,7 +230,6 @@ _onMouseMove(e){
 }
 
  onIdleSlider(e) {
-   console.log("not active");
    this.setState({
      intermezzoDisplay: "block"
    })
@@ -307,13 +301,13 @@ _onMouseMove(e){
         element={document}
         onActive={this.onActive}
         onIdle={this.onIdle}
-        timeout={4000*2}>
+        timeout={55000}>
           <Flasher diplay={this.state.displayFlasher}/>
           <div style={{position: "relative"}}>
               <section className="white info_menu">
               <span onClick={this._toggleMain}> ←← </span>
               <span onClick={this._toggleIndex}>(1)PHOTOS</span>
-              <span className="selected" onClick={this._toggleInfo}>(2)info</span>
+              <span onClick={this._toggleInfo}>(2)info</span>
               <span onClick={this._toggleVideos}>(3)video works</span>
               </section>
           <Slider />
@@ -374,7 +368,7 @@ _onMouseMove(e){
                 element={document}
                 onActive={this.onActive}
                 onIdle={this.onIdle}
-                timeout={4000*2}>
+                timeout={55000}>
 
                  <div id="no_background" className="App" style={styles}
                   onClick={this._onMouseClick}
@@ -421,11 +415,12 @@ _onMouseMove(e){
                 }
                 return (
                     <IdleTimer
+                    key={i}
                     ref={ref => { this.idleTimer = ref }}
                     element={document}
                     onActive={this.onActive}
                     onIdle={this.onIdle}
-                    timeout={4000*2}>
+                    timeout={55000}>
                         <div className="img_thumbnails" key={i}>
                         <img src={ele.gsx$link.$t}
                         className={returnRandomScale()}
@@ -443,7 +438,7 @@ _onMouseMove(e){
                   element={document}
                   onActive={this.onActive}
                   onIdle={this.onIdle}
-                  timeout={4000*2}>
+                  timeout={55000}>
                   <div className="App" style={styles}
                   onKeyPress={this._handleKeyPress}
                   tabIndex="0">
@@ -468,7 +463,7 @@ _onMouseMove(e){
                   element={document}
                   onActive={this.onActive}
                   onIdle={this.onIdle}
-                  timeout={4000*2}>
+                  timeout={55000}>
 
                   <div>
                     <section className="img_thumbnails_focus"
