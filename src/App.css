@@ -413,8 +413,9 @@ a{
 
 .img_thumbnails_container{
   position: absolute;
+  top: 40vh;
   padding-left: 2vw;
-  top: 9vw;
+  padding-right: 2vw;
   padding-bottom: 2vw;
 }
 

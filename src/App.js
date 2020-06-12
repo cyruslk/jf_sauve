@@ -4,7 +4,6 @@ import './App.css';
 import Videos from "./Videos.js";
 import Flasher from "./Flasher.js";
 import Slider from "./Slider.js";
-import Thumbnails from "./Thumbnails.js";
 import axios from 'axios';
 import IdleTimer from 'react-idle-timer';
 import ReactDOMServer from 'react-dom/server';
@@ -42,6 +41,9 @@ class App extends Component {
          main_text_info: "",
          inquiries_info: "",
          other_links_info: "",
+         selected_projects: null,
+         active_selected_project_content: null,
+         active_selected_project_title: null,
          info: false,
          videos: false,
          index: false,
@@ -49,73 +51,65 @@ class App extends Component {
          x: 200,
          y: 200,
          scroll: "hidden",
-         image_caption_slider: "Click for more"
+         image_caption_slider: "Click for more",
+         selected_projects_menu: null
        };
        this.idleTimer = null;
        this.onActive = this._onActive.bind(this)
        this.onIdle = this._onIdle.bind(this)
-       this._onMouseMove = this._onMouseMove.bind(this);
-       this._toggleInfo = this._toggleInfo.bind(this);
-       this._toggleIndex = this._toggleIndex.bind(this);
-       this._toggleVideos = this._toggleVideos.bind(this);
-       this._toggleMain = this._toggleMain.bind(this);
-       this._onHoverInfoText = this._onHoverInfoText.bind(this);
-
   }
 
 
-  componentDidMount(){
-    document.addEventListener("keydown", this._handleKeyPress.bind(this));
-    document.body.style.backgroundColor = "black";
-     axios.get(spreadsheetURL)
-     .then((response) => {
-       const shuffledResponse = _.shuffle(response.data.feed.entry);
+componentDidMount(){
+  document.addEventListener("keydown", this._handleKeyPress.bind(this));
+  document.body.style.backgroundColor = "black";
+   axios.get(spreadsheetURL)
+   .then((response) => {
+     const shuffledResponse = _.shuffle(response.data.feed.entry);
+     this.setState({
+       flickr_data: shuffledResponse.filter(ele => ele.gsx$section.$t === "flickr_img"),
+       slider_data: shuffledResponse.filter(ele => ele.gsx$section.$t === "slider"),
+       thumbnails_data: shuffledResponse.filter(ele => ele.gsx$section.$t === "thumbnails"),
+       info_data: shuffledResponse.filter(ele => ele.gsx$section.$t === "info"),
+       selected_projects: shuffledResponse.filter(ele => ele.gsx$section.$t === "selected_projects")
+     }, () => {
        this.setState({
-         flickr_data: shuffledResponse.filter(ele => ele.gsx$section.$t === "flickr_img")
-       })
-       this.setState({
-         slider_data: shuffledResponse.filter(ele => ele.gsx$section.$t === "slider"),
-       })
-       this.setState({
-         thumbnails_data: shuffledResponse.filter(ele => ele.gsx$section.$t === "thumbnails")
-       })
-       this.setState({
-         info_data: shuffledResponse.filter(ele => ele.gsx$section.$t === "info")
-       })
-       this.setState({
-         main_text_info: this.state.info_data
-          .filter(ele => ele.gsx$infotype.$t === "main_text")[0].gsx$additionaltxt.$t
-       })
-       this.setState({
-         inquiries_info: this.state.info_data
-          .filter(ele => ele.gsx$infotype.$t === "inquiries")
-       })
-       this.setState({
-         other_links_info: this.state.info_data
-          .filter(ele => ele.gsx$infotype.$t === "other_links")
-       })
-       this.setState({
-         videos_data: shuffledResponse.filter(ele => ele.gsx$section.$t === "video_works")
+         main_text_info: this.state.info_data.filter(ele => ele.gsx$infotype.$t === "main_text")[0].gsx$additionaltxt.$t,
+         inquiries_info: this.state.info_data.filter(ele => ele.gsx$infotype.$t === "inquiries"),
+         other_links_info: this.state.info_data.filter(ele => ele.gsx$infotype.$t === "other_links"),
+         videos_data: shuffledResponse.filter(ele => ele.gsx$section.$t === "video_works"),
+         selected_projects_menu: this.removeDuplicatesFromArray(this.state.selected_projects)
        })
      })
-     .catch(function (error) {
-       console.log(error);
-     });
-    }
+   })
+   .catch(function (error) {
+     console.log(error);
+   });
+ };
 
 
- updateWindowDimensions() {
+ removeDuplicatesFromArray = (array) => {
+   let arrayMaped = array.map((ele, index) => {
+     return ele.gsx$type.$t;
+   })
+   return arrayMaped.filter(function(item, index){
+		return arrayMaped.indexOf(item) >= index;
+	});
+ }
+
+
+ updateWindowDimensions = () => {
     this.setState({
       width: window.innerWidth,
       height: window.innerHeight
     });
-  }
+  };
 
-  _onHoverInfoText(){
+  _onHoverInfoText = () => {
     this.setState({
       backgroundColour: '#'+Math.random().toString(16).substr(-6),
     })
-  }
+  };
 
   _handleKeyPress = (value) => {
     if (value.charCode == 48) {
@@ -130,25 +124,25 @@ class App extends Component {
     if (value.charCode == 51) {
       return this._toggleVideos();
     }
-  }
+  };
 
-  handleSortEnter(imgLink, i) {
+  handleSortEnter = (imgLink, i)  => {
      this.setState({
        img_thumbnails_bigger: imgLink,
        img_thumbnails_index: i,
        display_lightbox: "flex"
      })
-  }
+  };
 
-  handleSortLeave() {
-       this.setState({
-         img_thumbnails_bigger: "",
-         display_lightbox: "none"
-       })
-    }
+  handleSortLeave = () => {
+     this.setState({
+       img_thumbnails_bigger: "",
+       display_lightbox: "none"
+     })
+  };
 
 
-  _toggleInfo(e){
+  _toggleInfo = (e) =>{
     this.setState({
       index: false,
       info: true,
@@ -156,9 +150,9 @@ class App extends Component {
       intermezzoDisplay: false,
       displayFlasher: "none"
     })
-  }
+  };
 
-  _toggleMain(e){
+  _toggleMain = (e) =>{
     this.setState({
       index: false,
       info: false,
@@ -166,19 +160,21 @@ class App extends Component {
       intermezzoDisplay: false,
       displayFlasher: "none"
     })
-  }
+  };
 
-  _toggleIndex(e){
+  _toggleIndex = (e) =>{
     this.setState({
       index: true,
       info: false,
       videos: false,
       intermezzoDisplay: false,
-      displayFlasher: "none"
+      displayFlasher: "none",
+      active_selected_project_content: null,
+      active_selected_project_title: null
     })
-  }
+  };
 
-  _toggleVideos(e){
+  _toggleVideos = (e) =>{
     this.setState({
       index: false,
       info: false,
@@ -186,60 +182,104 @@ class App extends Component {
       intermezzoDisplay: false,
       displayFlasher: "none"
     })
-  }
+  };
 
-_onActive(e) {
+_onActive = (e) => {
   this.setState({
     intermezzoDisplay: false
   })
-}
+};
 
-_onIdle(e) {
+_onIdle = (e) =>{
   this.setState({
     intermezzoDisplay: true
   })
-}
+};
 
-handlePause(event) {
-  this.setState({
-    paused: event.target.checked,
-  });
-}
-
-handlePlayerPause() {
-  this.setState({ paused: true });
-}
-
-handlePlayerPlay() {
-  this.setState({ paused: false });
-}
-
-handleVolume(event) {
-  this.setState({
-    volume: parseFloat(event.target.value),
-  });
-}
-
-
-
-_onMouseMove(e){
+_onMouseMove = (e) => {
   this.setState({
     x: e.screenX,
     y: e.screenY
   });
 }
 
- onIdleSlider(e) {
+ onIdleSlider = (e) => {
    this.setState({
      intermezzoDisplay: "block"
    })
  }
 
- _onActiveInfo() {
+ _onActiveInfo = () => {
    const  newCol = '#'+Math.random().toString(16).substr(-6);
    this.setState({
      backgroundColor: newCol
    })
+ };
+
+ toggleSelectedProject = (eleToFilter, index) => {
+   if(!this.state.selected_projects){return null};
+
+   let selectedProjects = this.state.selected_projects;
+   const filteredArray = selectedProjects.filter(category => category.gsx$type.$t === eleToFilter);
+   this.setState({
+     active_selected_project_content: filteredArray,
+     active_selected_project_title: eleToFilter
+   })
+ };
+
+ displaySelectedProject = () => {
+   if(!this.state.active_selected_project_content){return null};
+   let selectedProjectMapped = this.state.active_selected_project_content
+   .map((ele, index) => {
+     return (
+       <img style={{width: "10vw"}} src={ele.gsx$link.$t} key={index} />
+     )
+   })
+
+   const dirty_style_for_now = {
+     position: "absolute",
+     right: 0,
+     top: 0,
+     zIndex: "100"
+   };
+
+   return (
+     <div style={dirty_style_for_now}>
+         {selectedProjectMapped}
+     </div>
+   )
+ }
+
+
+ subMenuProjectsHere = () => {
+   const dirty_style_for_now = {
+      position: "absolute",
+      top: "10vh",
+      left: 0
+   };
+
+   if(!this.state.selected_projects_menu){
+     return null;
+   }
+
+   let selectedProjectMaped = this.state.selected_projects_menu
+   .map((ele, index) => {
+     return (
+       <li key={index}
+       onClick={() => this.toggleSelectedProject(ele, index)}>
+        {ele}
+       </li>
+     )
+   });
+
+
+   return (
+     <div style={dirty_style_for_now}>
+        <ul>
+          {selectedProjectMaped}
+        </ul>
+     </div>
+   )
  }
 
   render() {
@@ -432,6 +472,8 @@ _onMouseMove(e){
               })
 
               if(this.state.display_lightbox === "none"){
+
+
                 return(
                   <IdleTimer
                   ref={ref => { this.idleTimer = ref }}
@@ -442,15 +484,17 @@ _onMouseMove(e){
                   <div className="App" style={styles}
                   onKeyPress={this._handleKeyPress}
                   tabIndex="0">
-                    <section className="img_thumbnails_container" style={{backgroundColor: this.state.backgroundColour}}>
-                      {thumbnails_rendered}
-                    </section>
                       <section id="info_menu_index" className="info_menu">
                       <span onClick={this._toggleMain}> ←← </span>
                       <span className="selected" onClick={this._toggleIndex}>(1)PHOTOS</span>
                       <span onClick={this._toggleInfo}>(2)info</span>
                       <span onClick={this._toggleVideos}>(3)video works</span>
                       <span style={{color: "black", textTransform: "lowercase"}}>click to open</span>
+                      </section>
+                      {this.subMenuProjectsHere()}
+                      {this.displaySelectedProject()}
+                      <section className="img_thumbnails_container" style={{backgroundColor: this.state.backgroundColour}}>
+                        {thumbnails_rendered}
                       </section>
                   </div>
                   </IdleTimer>
@@ -499,7 +543,6 @@ _onMouseMove(e){
                         <div key={i*4} id="videos">
                           <Videos videos_data={this.state.videos_data[i]}/>
                         </div>
-
                           )
                         })
 
