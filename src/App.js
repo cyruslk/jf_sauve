@@ -47,6 +47,7 @@ class App extends Component {
          info: false,
          videos: false,
          index: false,
+         toggleSelectedProject: false,
          visible_data_slider: "",
          x: 200,
          y: 200,
@@ -222,29 +223,25 @@ _onMouseMove = (e) => {
    let selectedProjects = this.state.selected_projects;
    const filteredArray = selectedProjects.filter(category => category.gsx$type.$t === eleToFilter);
    this.setState({
+     toggleSelectedProject: true,
      active_selected_project_content: filteredArray,
      active_selected_project_title: eleToFilter
    })
  };
 
  displaySelectedProject = () => {
-   if(!this.state.active_selected_project_content){return null};
+   if(!this.state.toggleSelectedProject){return null};
    let selectedProjectMapped = this.state.active_selected_project_content
    .map((ele, index) => {
      return (
-       <img style={{width: "10vw"}} src={ele.gsx$link.$t} key={index} />
+       <img style={{width: "100vw"}}
+       src={ele.gsx$link.$t}
+       key={index} />
      )
    })
 
-   const dirty_style_for_now = {
-     position: "absolute",
-     right: 0,
-     top: 0,
-     zIndex: "100"
-   };
-
    return (
-     <div style={dirty_style_for_now}>
+     <div>
          {selectedProjectMapped}
      </div>
    )
@@ -252,11 +249,6 @@ _onMouseMove = (e) => {
 
 
  subMenuProjectsHere = () => {
-   const dirty_style_for_now = {
-      position: "absolute",
-      top: "10vh",
-      left: 0
-   };
 
    if(!this.state.selected_projects_menu){
      return null;
@@ -272,14 +264,53 @@ _onMouseMove = (e) => {
      )
    });
 
-
    return (
-     <div style={dirty_style_for_now}>
-        <ul>
-          {selectedProjectMaped}
-        </ul>
-     </div>
+     <div className="selected_projects_menu">
+        <ul>{selectedProjectMaped}</ul>
+      </div>
    )
+   };
+
+   closeSelectedProject = () => {
+     return (
+       <div
+        onClick={this.closeSelectedProjectStuff}
+        className="close_selected_project">
+        x
+        </div>
+     )
+   }
+
+   closeSelectedProjectStuff = () => {
+     this.setState({
+       toggleSelectedProject: false
+     })
+   }
+
+
+   displayAll = () => {
+
+     if(this.state.toggleSelectedProject){return null};
+
+     const thumbnails_rendered = this.state.thumbnails_data.map((ele, i) => {
+         function returnRandomScale(){
+           const scaleClass = ["scale_04","scale_05","scale_06","scale_07", "scale_08", "scale_09", "scale_1"];
+           return scaleClass[Math.floor(Math.random()*scaleClass.length)]
+         }
+       return (
+         <div className="img_thumbnails" key={i}>
+             <img src={ele.gsx$link.$t}
+             className={returnRandomScale()}
+             onClick={() => this.handleSortEnter(ele.gsx$link.$t, i)}/>
+         </div>
+       )
+     })
+
+     return (
+       <section className="img_thumbnails_container" style={{backgroundColor: this.state.backgroundColour}}>
+         {thumbnails_rendered}
+       </section>
+     )
  }
 
   render() {
@@ -448,28 +479,6 @@ _onMouseMove = (e) => {
           && this.state.index === true
           && this.state.intermezzoDisplay === false){
 
-              const thumbnails_rendered = this.state.thumbnails_data.map((ele, i) => {
-                function returnRandomScale(){
-                  const scaleClass = ["scale_04","scale_05","scale_06","scale_07", "scale_08", "scale_09", "scale_1"];
-                  return scaleClass[Math.floor(Math.random()*scaleClass.length)]
-                }
-                return (
-                    <IdleTimer
-                    key={i}
-                    ref={ref => { this.idleTimer = ref }}
-                    element={document}
-                    onActive={this.onActive}
-                    onIdle={this.onIdle}
-                    timeout={55000}>
-                        <div className="img_thumbnails" key={i}>
-                        <img src={ele.gsx$link.$t}
-                        className={returnRandomScale()}
-                        onClick={() => this.handleSortEnter(ele.gsx$link.$t, i)}
-                        />
-                  </div>
-                  </IdleTimer>
-                )
-              })
 
               if(this.state.display_lightbox === "none"){
 
@@ -489,13 +498,11 @@ _onMouseMove = (e) => {
                       <span className="selected" onClick={this._toggleIndex}>(1)PHOTOS</span>
                       <span onClick={this._toggleInfo}>(2)info</span>
                       <span onClick={this._toggleVideos}>(3)video works</span>
-                      <span style={{color: "black", textTransform: "lowercase"}}>click to open</span>
-                      </section>
                       {this.subMenuProjectsHere()}
-                      {this.displaySelectedProject()}
-                      <section className="img_thumbnails_container" style={{backgroundColor: this.state.backgroundColour}}>
-                        {thumbnails_rendered}
+                      {this.closeSelectedProject()}
                       </section>
+                      {this.displaySelectedProject()}
+                      {this.displayAll()}
                   </div>
                   </IdleTimer>
                 )
@@ -557,10 +564,6 @@ _onMouseMove = (e) => {
                           <span onClick={this._toggleIndex}>(1)PHOTOS</span>
                           <span onClick={this._toggleInfo}>(2)info</span>
                           <span className="selected" onClick={this._toggleVideos}>(3)video works</span>
-                          <span className="remove_mob" style={{color: "black",
-                                        textTransform: "lowercase",
-                                        display: "none",
-                                        color: "white"}}>hover to add sound</span>
                           </section>
 
                           <section className="video_main_container">
