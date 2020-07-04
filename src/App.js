@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import HorizontalScroll from 'react-scroll-horizontal'
 import ReactDOM from 'react-dom';
 import './App.css';
 import Videos from "./Videos.js";
@@ -24,6 +25,7 @@ class App extends Component {
          counter: 0,
          timerFlicker: 0,
          displayFlasher: "block",
+         coloredMenu: false,
          styleFlicker: "",
          flickr_data: "",
          displayThumbnails: false,
@@ -169,6 +171,7 @@ componentDidMount(){
       info: false,
       videos: false,
       intermezzoDisplay: false,
+      toggleSelectedProject: false,
       displayFlasher: "none",
       active_selected_project_content: null,
       active_selected_project_title: null
@@ -225,32 +228,37 @@ _onMouseMove = (e) => {
    this.setState({
      toggleSelectedProject: true,
      active_selected_project_content: filteredArray,
-     active_selected_project_title: eleToFilter
+     active_selected_project_title: eleToFilter,
+     coloredMenu: true
    })
  };
 
  displaySelectedProject = () => {
-   if(!this.state.toggleSelectedProject){return null};
+   if(!this.state.toggleSelectedProject){
+     return null
+   };
    let selectedProjectMapped = this.state.active_selected_project_content
    .map((ele, index) => {
      return (
-       <img style={{width: "100vw"}}
+       <img
+       className="img_categories_selected"
        src={ele.gsx$link.$t}
        key={index} />
      )
    })
 
    return (
-     <div>
+     <HorizontalScroll reverseScroll={true}>
          {selectedProjectMapped}
-     </div>
+     </HorizontalScroll>
    )
  }
 
 
  subMenuProjectsHere = () => {
 
-   if(!this.state.selected_projects_menu){
+   if(!this.state.selected_projects_menu
+     || this.state.toggleSelectedProject){
      return null;
    }
 
@@ -258,7 +266,7 @@ _onMouseMove = (e) => {
    .map((ele, index) => {
      return (
        <li key={index}
-       onClick={() => this.toggleSelectedProject(ele, index)}>
+        onClick={() => this.toggleSelectedProject(ele, index)}>
         {ele}
        </li>
      )
@@ -272,19 +280,48 @@ _onMouseMove = (e) => {
    };
 
    closeSelectedProject = () => {
+     if(!this.state.toggleSelectedProject){
+       return null;
+     }
      return (
        <div
         onClick={this.closeSelectedProjectStuff}
         className="close_selected_project">
-        x
+          <span style={this.toggleColor()}>back to all</span>
         </div>
      )
    }
 
    closeSelectedProjectStuff = () => {
      this.setState({
-       toggleSelectedProject: false
+       toggleSelectedProject: false,
+       coloredMenu: false
      })
+   }
+
+   toggleColor = () => {
+     if(this.state.toggleSelectedProject){
+       return {
+         color: this.state.backgroundColour
+       }
+     }else{
+       return {
+         color: "white"
+       }
+     }
+   }
+
+   displayMenu = () => {
+     return(
+       <section id="info_menu_index" className="info_menu">
+         <span onClick={this._toggleMain} style={this.toggleColor()}> ←← </span>
+         <span className="selected" style={this.toggleColor()} onClick={this._toggleIndex}>(1)PHOTOS</span>
+         <span onClick={this._toggleInfo} style={this.toggleColor()}>(2)info</span>
+         <span onClick={this._toggleVideos} style={this.toggleColor()}>(3)video works</span>
+         {this.subMenuProjectsHere()}
+         {this.closeSelectedProject()}
+       </section>
+     )
    }
 
 
@@ -294,7 +331,7 @@ _onMouseMove = (e) => {
 
      const thumbnails_rendered = this.state.thumbnails_data.map((ele, i) => {
          function returnRandomScale(){
-           const scaleClass = ["scale_04","scale_05","scale_06","scale_07", "scale_08", "scale_09", "scale_1"];
+           const scaleClass = ["scale_08", "scale_09", "scale_1"];
            return scaleClass[Math.floor(Math.random()*scaleClass.length)]
          }
        return (
@@ -493,16 +530,9 @@ _onMouseMove = (e) => {
                   <div className="App" style={styles}
                   onKeyPress={this._handleKeyPress}
                   tabIndex="0">
-                      <section id="info_menu_index" className="info_menu">
-                      <span onClick={this._toggleMain}> ←← </span>
-                      <span className="selected" onClick={this._toggleIndex}>(1)PHOTOS</span>
-                      <span onClick={this._toggleInfo}>(2)info</span>
-                      <span onClick={this._toggleVideos}>(3)video works</span>
-                      {this.subMenuProjectsHere()}
-                      {this.closeSelectedProject()}
-                      </section>
-                      {this.displaySelectedProject()}
-                      {this.displayAll()}
+                    {this.displayMenu()}
+                    {this.displaySelectedProject()}
+                    {this.displayAll()}
                   </div>
                   </IdleTimer>
                 )

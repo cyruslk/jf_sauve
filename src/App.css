@@ -149,11 +149,6 @@ a{
   display: block;
 }
 
-#videos{
-  margin-top: 8vw;
-}
-
-
 .main_info span{
   font-size: 2.6vw;
   font-family: Canela-Light;
@@ -310,7 +305,7 @@ a{
   left: 0;
   line-height: 100%;
   top: 1vw;
-  font-size: 58vw;
+  font-size: 65vw;
   font-family: Canela-Light;
   z-index: 1;
 }
@@ -335,7 +330,7 @@ a{
 }
 
 .selected_projects_menu ul li{
-  font-family: Canela-Light;
+  font-family: Dia-Bold;
   color: white;
   text-transform: uppercase;
   font-size: 1.5vw;
@@ -378,7 +373,7 @@ a{
 .info_menu span{
   text-transform: uppercase;
   font-family: Canela-Light;
-  font-size: 2.6vw;
+  font-size: 1.6vw;
   color: white;
   margin: 1.2vw;
 }
@@ -388,13 +383,19 @@ a{
   padding-left: 0;
 }
 
-#info_menu_index span:last-child{
-  font-family: Dia-bold;
-}
+
 
 .close_selected_project{
   position: fixed;
   z-index: 10;
+  right: 2vw;
+  top: 2vw;
+}
+
+.close_selected_project span{
+  font-family: Dia-Bold;
+  text-transform: uppercase;
+  font-size: 1.5vw;
 }
 
 .info_menu h1{
@@ -427,7 +428,7 @@ a{
   right: 0;
   line-height: 100%;
   top: 1vw;
-  font-size: 58vw;
+  font-size: 65vw;
   font-family: Canela-Light;
   z-index: 1;
   }
@@ -512,6 +513,10 @@ a{
   flex-direction: column;
 }
 
+.video_container iframe{
+  width: 80vw;
+}
+
 #svg_container{
   display: flex;
   align-items: center;
@@ -560,6 +565,7 @@ a{
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  height: 110vh;
 }
 
 .control_vimeo{
@@ -588,6 +594,11 @@ a{
   display: flex;
   width: 30%;
   display: none;
+}
+
+
+.img_categories_selected{
+  height: 100vh;
 }
 
 .control_vimeo_inner div:first-child span{
