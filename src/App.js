@@ -254,8 +254,11 @@ _onMouseMove = (e) => {
        </HorizontalScroll>
      )
    }else{
+     // here
     return(
-      <div className="selected_projects_index_container">
+      <div
+      style={{backgroundColor: "grey"}}
+      className="selected_projects_index_container">
         {selectedProjectMapped}
       </div>
     )
@@ -358,12 +361,17 @@ _onMouseMove = (e) => {
      )
  }
 
+
+
   render() {
-    let styles = {
-      width: "100vw",
-      height: "100vh",
-      backgroundColor: this.state.backgroundColour
-      };
+
+
+   let styles = {
+     width: "100vw",
+     height: "100vh",
+     backgroundColor: this.state.backgroundColour
+   }
+
 
       let styles_info = {
       width: "100vw",
@@ -535,7 +543,8 @@ _onMouseMove = (e) => {
                   onActive={this.onActive}
                   onIdle={this.onIdle}
                   timeout={55000}>
-                  <div className="App" style={styles}
+                  <div
+                  className="App" style={styles}
                   onKeyPress={this._handleKeyPress}
                   tabIndex="0">
                     {this.displayMenu()}

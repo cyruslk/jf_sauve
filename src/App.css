@@ -778,8 +778,10 @@ and (orientation : portrait) {
     }
 
     .img_categories_selected{
-      width: 80vw;
+      width: 100vw;
       height: auto;
+      padding: 0;
+      transform: scale(0.8);
     }
 
     .selected_projects_index_container{
@@ -994,8 +996,10 @@ and (orientation : portrait) {
   }
 
   .img_categories_selected{
-    width: 80vw;
+    width: 100vw;
     height: auto;
+    padding: 0;
+    transform: scale(0.8);
   }
 
   .selected_projects_index_container{
