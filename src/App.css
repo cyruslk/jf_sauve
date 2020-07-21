@@ -395,7 +395,7 @@ a{
 }
 
 .close_selected_project span{
-  font-family: Dia-Bold;
+  font-family: Canela-Light;
   text-transform: uppercase;
   font-size: 1.5vw;
 }
@@ -519,6 +519,12 @@ a{
   width: 80vw;
 }
 
+.selected_projects_index_container{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 #svg_container{
   display: flex;
   align-items: center;
@@ -600,7 +606,8 @@ a{
 
 
 .img_categories_selected{
-  height: 100vh;
+  width: 100vw;
+  display: block;
 }
 
 .control_vimeo_inner div:first-child span{

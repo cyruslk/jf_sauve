@@ -50,6 +50,7 @@ class App extends Component {
          videos: false,
          index: false,
          toggleSelectedProject: false,
+         blurringImagesThumbnails: false,
          visible_data_slider: "",
          x: 200,
          y: 200,
@@ -221,12 +222,16 @@ _onMouseMove = (e) => {
  };
 
  toggleSelectedProject = (eleToFilter, index) => {
-   if(!this.state.selected_projects){return null};
+
+   if(!this.state.selected_projects){
+     return null
+   };
 
    let selectedProjects = this.state.selected_projects;
    const filteredArray = selectedProjects.filter(category => category.gsx$type.$t === eleToFilter);
    this.setState({
      toggleSelectedProject: true,
+     blurringImagesThumbnails: true,
      active_selected_project_content: filteredArray,
      active_selected_project_title: eleToFilter,
      coloredMenu: true
@@ -249,9 +254,9 @@ _onMouseMove = (e) => {
 
    if(this.state.windowWidth > 520){
      return (
-       <HorizontalScroll reverseScroll={true}>
-           {selectedProjectMapped}
-       </HorizontalScroll>
+       <div className="selected_projects_index_container">
+         {selectedProjectMapped}
+       </div>
      )
    }else{
     return(
@@ -295,7 +300,7 @@ _onMouseMove = (e) => {
        <div
         onClick={this.closeSelectedProjectStuff}
         className="close_selected_project">
-          <span style={this.toggleColor()}>back to all</span>
+          <span>back to all</span>
         </div>
      )
    }
@@ -322,33 +327,48 @@ _onMouseMove = (e) => {
    displayMenu = () => {
      return(
        <section id="info_menu_index" className="info_menu">
-         <span onClick={this._toggleMain} style={this.toggleColor()}> ←← </span>
-         <span className="selected" style={this.toggleColor()} onClick={this._toggleIndex}>(1)PHOTOS</span>
-         <span onClick={this._toggleInfo} style={this.toggleColor()}>(2)info</span>
-         <span onClick={this._toggleVideos} style={this.toggleColor()}>(3)video works</span>
+         <span onClick={this._toggleMain}> ←← </span>
+         <span className="selected" onClick={this._toggleIndex}>(1)PHOTOS</span>
+         <span onClick={this._toggleInfo}>(2)info</span>
+         <span onClick={this._toggleVideos}>(3)video works</span>
          {this.subMenuProjectsHere()}
          {this.closeSelectedProject()}
        </section>
      )
-   }
+   };
+
 
 
    displayAll = () => {
 
      if(this.state.toggleSelectedProject){return null};
 
+
      const thumbnails_rendered = this.state.thumbnails_data.map((ele, i) => {
          function returnRandomScale(){
            const scaleClass = ["scale_08", "scale_09", "scale_1"];
            return scaleClass[Math.floor(Math.random()*scaleClass.length)]
          }
-       return (
-         <div className="img_thumbnails" key={i}>
-             <img src={ele.gsx$link.$t}
-             className={returnRandomScale()}
-             onClick={() => this.handleSortEnter(ele.gsx$link.$t, i)}/>
-         </div>
-       )
+
+         if(this.state.blurringImagesThumbnails){
+           return (
+             <div className="img_thumbnails" key={i}>
+                 <img
+                 src={ele.gsx$link.$t}
+                 className={returnRandomScale()}
+                 onClick={() => this.handleSortEnter(ele.gsx$link.$t, i)}/>
+             </div>
+           )
+         }else{
+           return (
+             <div className="img_thumbnails" key={i}>
+                 <img
+                 src={ele.gsx$link.$t}
+                 className={returnRandomScale()}
+                 onClick={() => this.handleSortEnter(ele.gsx$link.$t, i)}/>
+             </div>
+           )
+         }
      })
 
      return (
@@ -486,7 +506,7 @@ _onMouseMove = (e) => {
                 onIdle={this.onIdle}
                 timeout={55000}>
 
-                 <div id="no_background" className="App" style={styles}
+                 <div id="no_background" className="App" style={this.toggleNoBackgroundColor()}
                   onClick={this._onMouseClick}
                   onKeyPress={this._handleKeyPress}
                   tabIndex="0">
