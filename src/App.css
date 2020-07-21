@@ -305,7 +305,7 @@ a{
   left: 0;
   line-height: 100%;
   top: 1vw;
-  font-size: 65vw;
+  font-size: 60vw;
   font-family: Canela-Light;
   z-index: 1;
 }
@@ -330,10 +330,11 @@ a{
 }
 
 .selected_projects_menu ul li{
-  font-family: Dia-Bold;
+  font-family: Canela-Light;
   color: white;
   text-transform: uppercase;
   font-size: 1.5vw;
+  cursor: pointer;
 }
 
 
@@ -373,9 +374,10 @@ a{
 .info_menu span{
   text-transform: uppercase;
   font-family: Canela-Light;
-  font-size: 1.6vw;
+  font-size: 2.6vw;
   color: white;
   margin: 1.2vw;
+  cursor: pointer;
 }
 
 .info_menu span:first-child{
@@ -428,7 +430,7 @@ a{
   right: 0;
   line-height: 100%;
   top: 1vw;
-  font-size: 65vw;
+  font-size: 60vw;
   font-family: Canela-Light;
   z-index: 1;
   }
@@ -773,6 +775,16 @@ and (orientation : portrait) {
           font-size: 43vw;
     }
 
+    .img_categories_selected{
+      width: 100vw;
+      height: auto;
+    }
+
+    .selected_projects_index_container{
+      position: absolute;
+      top: 0;
+    }
+
     #svg_text{
       font-size: 60vw;
     }
@@ -797,6 +809,7 @@ and (orientation : portrait) {
     .img_thumbnails_container{
       padding: 0;
       margin: 0;
+      top: 0;
     }
 
     .about_page .span_main_text{
@@ -935,6 +948,22 @@ and (orientation : portrait) {
         font-size: 43vw;
   }
 
+  .selected_projects_menu ul li{
+    font-size: 5vw;
+  }
+
+  .selected_projects_menu{
+    margin-left: 1.2vw;
+  }
+
+  .close_selected_project{
+    position: fixed;
+    z-index: 10;
+    left: 2vw;
+    top: 2vw;
+  }
+
+
   #svg_text{
     font-size: 60vw;
   }
@@ -959,6 +988,17 @@ and (orientation : portrait) {
   .img_thumbnails_container{
     padding: 0;
     margin: 0;
+    top: 0;
+  }
+
+  .img_categories_selected{
+    width: 100vw;
+    height: auto;
+  }
+
+  .selected_projects_index_container{
+    position: absolute;
+    top: 0;
   }
 
   .about_page .span_main_text{

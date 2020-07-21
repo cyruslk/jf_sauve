@@ -247,11 +247,19 @@ _onMouseMove = (e) => {
      )
    })
 
-   return (
-     <HorizontalScroll reverseScroll={true}>
-         {selectedProjectMapped}
-     </HorizontalScroll>
-   )
+   if(this.state.windowWidth > 520){
+     return (
+       <HorizontalScroll reverseScroll={true}>
+           {selectedProjectMapped}
+       </HorizontalScroll>
+     )
+   }else{
+    return(
+      <div className="selected_projects_index_container">
+        {selectedProjectMapped}
+      </div>
+    )
+   }
  }
 
 
