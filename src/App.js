@@ -295,7 +295,7 @@ _onMouseMove = (e) => {
        <div
         onClick={this.closeSelectedProjectStuff}
         className="close_selected_project">
-          <span style={this.toggleColor()}>back to all</span>
+          <span>back to all</span>
         </div>
      )
    }
@@ -322,10 +322,10 @@ _onMouseMove = (e) => {
    displayMenu = () => {
      return(
        <section id="info_menu_index" className="info_menu">
-         <span onClick={this._toggleMain} style={this.toggleColor()}> ←← </span>
-         <span className="selected" style={this.toggleColor()} onClick={this._toggleIndex}>(1)PHOTOS</span>
-         <span onClick={this._toggleInfo} style={this.toggleColor()}>(2)info</span>
-         <span onClick={this._toggleVideos} style={this.toggleColor()}>(3)video works</span>
+         <span onClick={this._toggleMain}> ←← </span>
+         <span className="selected" onClick={this._toggleIndex}>(1)PHOTOS</span>
+         <span onClick={this._toggleInfo}>(2)info</span>
+         <span onClick={this._toggleVideos}>(3)video works</span>
          {this.subMenuProjectsHere()}
          {this.closeSelectedProject()}
        </section>

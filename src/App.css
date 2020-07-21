@@ -395,7 +395,7 @@ a{
 }
 
 .close_selected_project span{
-  font-family: Dia-Bold;
+  font-family: Canela-Light;
   text-transform: uppercase;
   font-size: 1.5vw;
 }
@@ -600,7 +600,9 @@ a{
 
 
 .img_categories_selected{
-  height: 100vh;
+  height: 82vh;
+  padding: 8vw;
+  padding-bottom: 0;
 }
 
 .control_vimeo_inner div:first-child span{
